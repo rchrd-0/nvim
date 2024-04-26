@@ -190,6 +190,7 @@ vim.keymap.set('n', '<M-h>', ':wincmd h<CR>', { desc = 'Move focus to the left w
 vim.keymap.set('n', '<M-l>', ':wincmd l<CR>', { desc = 'Move focus to the right window' })
 vim.keymap.set('n', '<M-j>', ':wincmd j<CR>', { desc = 'Move focus to the lower window' })
 vim.keymap.set('n', '<M-k>', ':wincmd k<CR>', { desc = 'Move focus to the upper window' })
+vim.keymap.set('n', '<M-w>', '<C-w>w', { desc = 'Move focus to the next window' })
 
 -- custom keymaps
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
