@@ -192,6 +192,9 @@ vim.keymap.set('n', '<M-j>', ':wincmd j<CR>', { desc = 'Move focus to the lower 
 vim.keymap.set('n', '<M-k>', ':wincmd k<CR>', { desc = 'Move focus to the upper window' })
 vim.keymap.set('n', '<M-w>', '<C-w>w', { desc = 'Move focus to the next window' })
 
+vim.keymap.set('n', '[t', ':bp<CR>', { desc = 'Move to the previous buffer' })
+vim.keymap.set('n', ']t', ':bnext<CR>', { desc = 'Move to the next buffer' })
+
 -- custom keymaps
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
