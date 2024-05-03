@@ -13,4 +13,7 @@ return {
     vim.keymap.set('n', '<M-k>', ':TmuxNavigateUp<CR>'),
     vim.keymap.set('n', '<M-l>', ':TmuxNavigateRight<CR>'),
   },
+  {
+    'HiPhish/rainbow-delimiters.nvim',
+  },
 }
