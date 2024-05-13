@@ -14,6 +14,25 @@ return {
     vim.keymap.set('n', '<M-l>', ':TmuxNavigateRight<CR>'),
   },
   {
-    'HiPhish/rainbow-delimiters.nvim',
+    'windwp/nvim-ts-autotag',
+    opts = {},
   },
+  {
+    'luckasRanarison/tailwind-tools.nvim',
+    dependencies = { 'nvim-treesitter/nvim-treesitter' },
+    opts = {}, -- your configuration
+  },
+  {
+    'akinsho/bufferline.nvim',
+    version = '*',
+    dependencies = 'nvim-tree/nvim-web-devicons',
+    opts = {
+      options = {
+        show_buffer_close_icons = false,
+      },
+    },
+  },
+  -- {
+  --   'HiPhish/rainbow-delimiters.nvim',
+  -- },
 }
