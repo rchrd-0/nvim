@@ -21,6 +21,10 @@ return {
           ['P'] = { 'toggle_preview', config = { use_float = false, use_image_nvim = true } },
         },
       },
+      filtered_items = {
+        hide_dotfiles = false,
+        hide_hidden = false,
+      },
     },
   },
 }
