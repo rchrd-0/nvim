@@ -840,6 +840,15 @@ require('lazy').setup({
     lazy = false,
     opts = {
       dimInactive = true,
+      colors = {
+        theme = {
+          all = {
+            ui = {
+              bg_gutter = 'none',
+            },
+          },
+        },
+      },
     },
     init = function()
       -- Load the colorscheme here.
