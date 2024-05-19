@@ -611,17 +611,9 @@ require('lazy').setup({
             },
           },
           filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
-          -- filetypes = { 'typescript', 'javascript', 'typescriptreact', 'javascriptreact' },
         },
         tailwindcss = {},
-        volar = {
-          -- init_options = {
-          --   vue = {
-          --     hybridMode = false,
-          --   },
-          -- },
-          -- filetypes = { 'vue' },
-        },
+        volar = {},
         gopls = {},
         phpactor = {},
         intelephense = {},
@@ -907,7 +899,7 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'vue', 'css', 'scss', 'php' },
+      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'vue', 'css', 'scss', 'php', 'go' },
       auto_install = true,
       highlight = {
         enable = true,
