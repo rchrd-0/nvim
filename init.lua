@@ -328,6 +328,12 @@ require('lazy').setup({
         ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
         ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
         ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
+        ['<C-W>'] = {
+          H = 'Move window left',
+          J = 'Move window down',
+          K = 'Move window up',
+          L = 'Move window right',
+        },
       }
       -- visual mode
       require('which-key').register({
