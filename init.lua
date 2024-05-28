@@ -220,6 +220,15 @@ vim.api.nvim_create_autocmd('TextYankPost', {
   end,
 })
 
+-- save folds
+vim.cmd [[
+  augroup remember_folds
+      autocmd!
+      autocmd BufWinLeave *.* mkview
+      autocmd BufWinEnter *.* silent! loadview
+    augroup END
+  ]]
+
 -- [[ Install `lazy.nvim` plugin manager ]]
 --    See `:help lazy.nvim.txt` or https://github.com/folke/lazy.nvim for more info
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
