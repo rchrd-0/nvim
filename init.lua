@@ -829,12 +829,19 @@ require('lazy').setup({
           --
           -- <c-l> will move you to the right of each of the expansion locations.
           -- <c-h> is similar, except moving you backwards.
-          ['<M-[>'] = cmp.mapping(function()
+          ['<Tab>'] = cmp.mapping(function(fallback)
             if luasnip.expand_or_locally_jumpable() then
               luasnip.expand_or_jump()
+            else
+              local copilot_accept = vim.fn['copilot#Accept'] ''
+              if copilot_accept ~= '' then
+                vim.api.nvim_feedkeys(copilot_accept, 'i', true)
+              else
+                fallback()
+              end
             end
           end, { 'i', 's' }),
-          ['<M-]>'] = cmp.mapping(function()
+          ['<S-Tab>'] = cmp.mapping(function()
             if luasnip.locally_jumpable(-1) then
               luasnip.jump(-1)
             end
