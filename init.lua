@@ -155,6 +155,14 @@ vim.opt.cursorline = true
 vim.opt.scrolloff = 10
 vim.opt.colorcolumn = '100'
 
+vim.opt.tabstop = 2
+vim.opt.shiftwidth = 2
+vim.opt.softtabstop = 2
+vim.opt.expandtab = true
+vim.opt.smartindent = true
+vim.opt.autoindent = true
+
+vim.opt.autoread = true
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -854,6 +862,9 @@ require('lazy').setup({
     priority = 1000, -- Make sure to load this before all the other start plugins.
     lazy = false,
     opts = {
+      dimInactive = true,
+      terminalColors = true,
+      transparent = true,
       overrides = function(colors)
         local theme = colors.theme
         return {
@@ -863,7 +874,6 @@ require('lazy').setup({
           PmenuThumb = { bg = theme.ui.bg_p2 },
         }
       end,
-      dimInactive = true,
       colors = {
         theme = {
           all = {
