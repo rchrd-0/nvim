@@ -407,14 +407,26 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
+        defaults = {
+          file_ignore_patterns = { '.git/', 'node_modules/' },
+          mappings = {
+            i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+          },
+        },
         pickers = {
           find_files = {
-            find_command = { 'rg', '--files', '--hidden', '--no-ignore', '--follow', '--glob', '!.git' },
+            hidden = true,
+            no_ignore = true,
+            follow = true,
+          },
+          live_grep = {
+            file_ignore_patterns = {
+              '%.lock$',
+              '%-lock%..*$',
+              '.git/',
+              'node_modules/',
+            },
+            additional_args = { '--hidden' },
           },
         },
         extensions = {
