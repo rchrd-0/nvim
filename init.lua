@@ -163,6 +163,7 @@ vim.opt.smartindent = true
 vim.opt.autoindent = true
 
 vim.opt.autoread = true
+
 -- [[ Basic Keymaps ]]
 --  See `:help vim.keymap.set()`
 
@@ -655,6 +656,23 @@ require('lazy').setup({
           },
           filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
         },
+        html = {
+          filetypes = { 'html', 'ejs' },
+        },
+        emmet_language_server = {
+          filetypes = {
+            'html',
+            'javascript',
+            'javascriptreact',
+            'typescriptreact',
+            'css',
+            'sass',
+            'scss',
+            'ejs',
+            'vue',
+            'blade',
+          },
+        },
         tailwindcss = {},
         volar = {},
         gopls = {},
@@ -798,6 +816,9 @@ require('lazy').setup({
       local luasnip = require 'luasnip'
       luasnip.config.setup {}
       luasnip.filetype_extend('javascript', { 'javascriptreact' })
+
+      vim.filetype.add { extension = { ejs = 'ejs' } }
+      luasnip.filetype_set('ejs', { 'html', 'javascript', 'ejs' })
 
       cmp.setup {
         snippet = {
@@ -991,6 +1012,9 @@ require('lazy').setup({
       require('nvim-treesitter.install').prefer_git = true
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
+
+      vim.treesitter.language.register('html', 'ejs')
+      vim.treesitter.language.register('javascript', 'ejs')
 
       -- There are additional nvim-treesitter modules that you can use to interact
       -- with nvim-treesitter. You should go explore a few and see what interests you:
