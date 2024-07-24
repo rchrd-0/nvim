@@ -143,7 +143,8 @@ vim.opt.splitbelow = true
 --  See `:help 'list'`
 --  and `:help 'listchars'`
 vim.opt.list = true
-vim.opt.listchars = { tab = '· ', trail = '·', nbsp = '␣' }
+-- vim.opt.listchars = { tab = '· ', trail = '·', nbsp = '␣' }
+vim.opt.listchars = { tab = '» ', trail = '·', nbsp = '␣' }
 
 -- Preview substitutions live, as you type!
 vim.opt.inccommand = 'split'
@@ -213,7 +214,8 @@ vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 vim.keymap.set('n', 'n', 'nzzzv')
 vim.keymap.set('n', 'N', 'Nzzzv')
-vim.keymap.set('n', '<C-_>', '<C-o>')
+vim.keymap.set('n', 'G', 'Gzz')
+-- vim.keymap.set('n', '<C-_>', '<C-o>')
 
 -- [[ Basic Autocommands ]]
 --  See `:help lua-guide-autocommands`
@@ -408,28 +410,28 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        defaults = {
-          file_ignore_patterns = { '.git/', 'node_modules/' },
-          mappings = {
-            i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-          },
-        },
-        pickers = {
-          find_files = {
-            hidden = true,
-            no_ignore = true,
-            follow = true,
-          },
-          live_grep = {
-            file_ignore_patterns = {
-              '%.lock$',
-              '%-lock%..*$',
-              '.git/',
-              'node_modules/',
-            },
-            additional_args = { '--hidden' },
-          },
-        },
+        -- defaults = {
+        --   file_ignore_patterns = { '.git/', 'node_modules/' },
+        --   mappings = {
+        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
+        --   },
+        -- },
+        -- pickers = {
+        --   find_files = {
+        --     hidden = true,
+        --     no_ignore = true,
+        --     follow = true,
+        --   },
+        --   live_grep = {
+        --     file_ignore_patterns = {
+        --       '%.lock$',
+        --       '%-lock%..*$',
+        --       '.git/',
+        --       'node_modules/',
+        --     },
+        --     additional_args = { '--hidden' },
+        --   },
+        -- },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -945,38 +947,40 @@ require('lazy').setup({
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    'rebelot/kanagawa.nvim',
-    name = 'kanagawa',
+    -- 'rebelot/kanagawa.nvim',
+    'rose-pine/neovim',
+    name = 'rose-pine',
     priority = 1000, -- Make sure to load this before all the other start plugins.
     lazy = false,
     opts = {
-      dimInactive = true,
-      terminalColors = true,
-      transparent = true,
-      overrides = function(colors)
-        local theme = colors.theme
-        return {
-          Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 }, -- add `blend = vim.o.pumblend` to enable transparency
-          PmenuSel = { fg = 'NONE', bg = theme.ui.bg_p2 },
-          PmenuSbar = { bg = theme.ui.bg_m1 },
-          PmenuThumb = { bg = theme.ui.bg_p2 },
-        }
-      end,
-      colors = {
-        theme = {
-          all = {
-            ui = {
-              bg_gutter = 'none',
-            },
-          },
-        },
-      },
+      -- dimInactive = true,
+      -- terminalColors = true,
+      -- transparent = true,
+      -- overrides = function(colors)
+      --   local theme = colors.theme
+      --   return {
+      --     Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 }, -- add `blend = vim.o.pumblend` to enable transparency
+      --     PmenuSel = { fg = 'NONE', bg = theme.ui.bg_p2 },
+      --     PmenuSbar = { bg = theme.ui.bg_m1 },
+      --     PmenuThumb = { bg = theme.ui.bg_p2 },
+      --   }
+      -- end,
+      -- colors = {
+      --   theme = {
+      --     all = {
+      --       ui = {
+      --         bg_gutter = 'none',
+      --       },
+      --     },
+      --   },
+      -- },
     },
     init = function()
       -- Load the colorscheme here.
       -- Like many other themes, this one has different styles, and you could load
       -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      vim.cmd.colorscheme 'kanagawa'
+      -- vim.cmd.colorscheme 'kanagawa'
+      vim.cmd.colorscheme 'rose-pine'
 
       -- You can configure highlights by doing something like:
       vim.cmd.hi 'Comment gui=none'
