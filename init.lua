@@ -655,6 +655,11 @@ require('lazy').setup({
             },
           },
           filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+          settings = {
+            implicitProjectConfiguration = {
+              checkJs = true,
+            },
+          },
         },
         html = {
           filetypes = { 'html', 'ejs' },
@@ -673,13 +678,21 @@ require('lazy').setup({
             'blade',
           },
         },
+        cssls = {
+          settings = {
+            css = { lint = { unknownAtRules = 'ignore' } },
+            scss = { lint = { unknownAtRules = 'ignore' } },
+          },
+        },
         tailwindcss = {},
         volar = {},
         gopls = {},
         phpactor = {},
         intelephense = {},
+        pyright = {},
+        eslint = {},
+        taplo = {},
         -- clangd = {},
-        -- pyright = {},
         -- rust_analyzer = {},
         -- ... etc. See `:help lspconfig-all` for a list of all the pre-configured LSPs
         --
@@ -718,6 +731,7 @@ require('lazy').setup({
       local ensure_installed = vim.tbl_keys(servers or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
+        'ruff',
       })
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
@@ -764,12 +778,42 @@ require('lazy').setup({
       formatters_by_ft = {
         lua = { 'stylua' },
         swift = { 'swiftformat' },
+        python = {
+          'ruff_fix',
+          'ruff_format',
+        },
         -- Conform can also run multiple formatters sequentially
         -- python = { "isort", "black" },
         --
         -- You can use a sub-list to tell conform to run *until* a formatter
         -- is found.
         javascript = { { 'prettierd', 'prettier' } },
+      },
+      formatters = {
+        ruff_fix = {
+          command = 'ruff',
+          args = {
+            'check',
+            '--fix',
+            '--exit-zero',
+            '--config',
+            vim.fn.expand '~/.config/nvim/.ruff.toml', -- Adjust this path as needed
+            '--stdin-filename',
+            '$FILENAME',
+            '-',
+          },
+          stdin = true,
+        },
+        ruff_format = {
+          command = 'ruff',
+          args = {
+            'format',
+            '--config',
+            vim.fn.expand '~/.config/nvim/.ruff.toml', -- Adjust this path as needed
+            '-',
+          },
+          stdin = true,
+        },
       },
     },
   },

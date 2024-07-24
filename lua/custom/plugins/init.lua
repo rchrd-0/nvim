@@ -51,7 +51,4 @@ return {
       { '<leader>lg', '<cmd>LazyGit<cr>', desc = '[L]azy[G]it' },
     },
   },
-  -- {
-  --   'HiPhish/rainbow-delimiters.nvim',
-  -- },
 }
