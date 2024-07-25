@@ -651,14 +651,14 @@ require('lazy').setup({
               {
                 name = '@vue/typescript-plugin',
                 location = vue_language_server_path,
-                languages = { 'vue' },
+                languages = { 'javascript', 'typescript', 'vue' },
               },
             },
           },
           filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
           settings = {
             implicitProjectConfiguration = {
-              checkJs = true,
+              checkJs = false,
             },
           },
         },
