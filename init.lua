@@ -202,19 +202,20 @@ vim.keymap.set('n', '<M-j>', ':wincmd j<CR>', { desc = 'Move focus to the lower 
 vim.keymap.set('n', '<M-k>', ':wincmd k<CR>', { desc = 'Move focus to the upper window' })
 vim.keymap.set('n', '<M-w>', '<C-w>w', { desc = 'Move focus to the next window' })
 
-vim.keymap.set('n', '[t', ':bp<CR>', { desc = 'Move to the previous buffer' })
-vim.keymap.set('n', ']t', ':bnext<CR>', { desc = 'Move to the next buffer' })
+vim.keymap.set('n', '[t', ':bp<CR>', { desc = 'Move to the previous buffer', silent = true })
+vim.keymap.set('n', ']t', ':bnext<CR>', { desc = 'Move to the next buffer', silent = true })
 
 -- custom keymaps
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
-
 vim.keymap.set('n', 'J', 'mzJ`z')
 vim.keymap.set('n', '<C-d>', '<C-d>zz')
 vim.keymap.set('n', '<C-u>', '<C-u>zz')
 vim.keymap.set('n', 'n', 'nzzzv')
 vim.keymap.set('n', 'N', 'Nzzzv')
 vim.keymap.set('n', 'G', 'Gzz')
+vim.keymap.set('n', '<M-`>', ':buffer #<CR>', { desc = 'Switch to the alternate buffer', silent = true })
+
 -- vim.keymap.set('n', '<C-_>', '<C-o>')
 
 -- [[ Basic Autocommands ]]
@@ -331,25 +332,23 @@ require('lazy').setup({
       require('which-key').setup()
 
       -- Document existing key chains
-      require('which-key').register {
-        ['<leader>c'] = { name = '[C]ode', _ = 'which_key_ignore' },
-        ['<leader>d'] = { name = '[D]ocument', _ = 'which_key_ignore' },
-        ['<leader>r'] = { name = '[R]ename', _ = 'which_key_ignore' },
-        ['<leader>s'] = { name = '[S]earch', _ = 'which_key_ignore' },
-        ['<leader>w'] = { name = '[W]orkspace', _ = 'which_key_ignore' },
-        ['<leader>t'] = { name = '[T]oggle', _ = 'which_key_ignore' },
-        ['<leader>h'] = { name = 'Git [H]unk', _ = 'which_key_ignore' },
-        ['<C-W>'] = {
-          H = 'Move window left',
-          J = 'Move window down',
-          K = 'Move window up',
-          L = 'Move window right',
-        },
+      require('which-key').add {
+        { '<leader>c', group = '[C]ode' },
+        { '<leader>d', group = '[D]ocument' },
+        { '<leader>r', group = '[R]ename' },
+        { '<leader>s', group = '[S]earch' },
+        { '<leader>w', group = '[W]orkspace' },
+        { '<leader>t', group = '[T]oggle' },
+        { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
+        { '<C-W>H', desc = 'Move window left' },
+        { '<C-W>J', desc = 'Move window down' },
+        { '<C-W>K', desc = 'Move window up' },
+        { '<C-W>L', desc = 'Move window right' },
+        { '<leader>js', group = '[JS]Doc' },
+        { '<leader>jsd', desc = 'Toggle [JSD]oc' },
+        { '<leader>jss', desc = '[S]tart [JS]Doc checking' },
+        { '<leader>jse', desc = '[E]nd [JSD]oc checking' },
       }
-      -- visual mode
-      require('which-key').register({
-        ['<leader>h'] = { 'Git [H]unk' },
-      }, { mode = 'v' })
     end,
   },
 
