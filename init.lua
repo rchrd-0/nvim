@@ -942,51 +942,6 @@ require('lazy').setup({
     end,
   },
 
-  { -- You can easily change to a different colorscheme.
-    -- Change the name of the colorscheme plugin below, and then
-    -- change the command in the config to whatever the name of that colorscheme is.
-    --
-    -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    -- 'rebelot/kanagawa.nvim',
-    'rose-pine/neovim',
-    name = 'rose-pine',
-    priority = 1000, -- Make sure to load this before all the other start plugins.
-    lazy = false,
-    opts = {
-      -- dimInactive = true,
-      -- terminalColors = true,
-      -- transparent = true,
-      -- overrides = function(colors)
-      --   local theme = colors.theme
-      --   return {
-      --     Pmenu = { fg = theme.ui.shade0, bg = theme.ui.bg_p1 }, -- add `blend = vim.o.pumblend` to enable transparency
-      --     PmenuSel = { fg = 'NONE', bg = theme.ui.bg_p2 },
-      --     PmenuSbar = { bg = theme.ui.bg_m1 },
-      --     PmenuThumb = { bg = theme.ui.bg_p2 },
-      --   }
-      -- end,
-      -- colors = {
-      --   theme = {
-      --     all = {
-      --       ui = {
-      --         bg_gutter = 'none',
-      --       },
-      --     },
-      --   },
-      -- },
-    },
-    init = function()
-      -- Load the colorscheme here.
-      -- Like many other themes, this one has different styles, and you could load
-      -- any other, such as 'tokyonight-storm', 'tokyonight-moon', or 'tokyonight-day'.
-      -- vim.cmd.colorscheme 'kanagawa'
-      vim.cmd.colorscheme 'rose-pine'
-
-      -- You can configure highlights by doing something like:
-      vim.cmd.hi 'Comment gui=none'
-    end,
-  },
-
   -- Highlight todo, notes, etc in comments
   { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
 
