@@ -18,6 +18,10 @@ return {
     'windwp/nvim-ts-autotag',
     opts = {},
   },
+  -- {
+  --   'HiPhish/rainbow-delimiters.nvim',
+  --   opts = {},
+  -- },
   {
     'luckasRanarison/tailwind-tools.nvim',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },

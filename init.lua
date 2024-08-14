@@ -154,7 +154,7 @@ vim.opt.cursorline = true
 
 -- Minimal number of screen lines to keep above and below the cursor.
 vim.opt.scrolloff = 10
-vim.opt.colorcolumn = '100'
+vim.opt.colorcolumn = '80,100'
 
 vim.opt.tabstop = 2
 vim.opt.shiftwidth = 2
@@ -202,9 +202,6 @@ vim.keymap.set('n', '<M-j>', ':wincmd j<CR>', { desc = 'Move focus to the lower 
 vim.keymap.set('n', '<M-k>', ':wincmd k<CR>', { desc = 'Move focus to the upper window' })
 vim.keymap.set('n', '<M-w>', '<C-w>w', { desc = 'Move focus to the next window' })
 
-vim.keymap.set('n', '[t', ':bp<CR>', { desc = 'Move to the previous buffer', silent = true })
-vim.keymap.set('n', ']t', ':bnext<CR>', { desc = 'Move to the next buffer', silent = true })
-
 -- custom keymaps
 vim.keymap.set('v', 'J', ":m '>+1<CR>gv=gv")
 vim.keymap.set('v', 'K', ":m '<-2<CR>gv=gv")
@@ -214,7 +211,10 @@ vim.keymap.set('n', '<C-u>', '<C-u>zz')
 vim.keymap.set('n', 'n', 'nzzzv')
 vim.keymap.set('n', 'N', 'Nzzzv')
 vim.keymap.set('n', 'G', 'Gzz')
-vim.keymap.set('n', '<M-`>', ':buffer #<CR>', { desc = 'Switch to the alternate buffer', silent = true })
+vim.keymap.set('n', '[t', ':bp<CR>', { desc = 'Move to the previous buffer', silent = true })
+vim.keymap.set('n', ']t', ':bnext<CR>', { desc = 'Move to the next buffer', silent = true })
+vim.keymap.set('n', '<M-[>', ':buffer #<CR>', { desc = 'Switch to the alternate buffer', silent = true })
+vim.keymap.set('n', '<M-]>', ':buffer #<CR>', { desc = 'Switch to the alternate buffer', silent = true })
 
 -- vim.keymap.set('n', '<C-_>', '<C-o>')
 
@@ -275,7 +275,7 @@ require('lazy').setup({
   --    require('Comment').setup({})
 
   -- "gc" to comment visual regions/lines
-  { 'github/copilot.vim' },
+  -- { 'github/copilot.vim' },
   {
     'numToStr/Comment.nvim',
     config = function()
@@ -348,6 +348,7 @@ require('lazy').setup({
         { '<leader>jsd', desc = 'Toggle [JSD]oc' },
         { '<leader>jss', desc = '[S]tart [JS]Doc checking' },
         { '<leader>jse', desc = '[E]nd [JSD]oc checking' },
+        { '<leader>cc', group = '[Copilot] [C]hat' },
       }
     end,
   },
@@ -409,28 +410,35 @@ require('lazy').setup({
         -- You can put your default mappings / updates / etc. in here
         --  All the info you're looking for is in `:help telescope.setup()`
         --
-        -- defaults = {
-        --   file_ignore_patterns = { '.git/', 'node_modules/' },
-        --   mappings = {
-        --     i = { ['<c-enter>'] = 'to_fuzzy_refine' },
-        --   },
-        -- },
-        -- pickers = {
-        --   find_files = {
-        --     hidden = true,
-        --     no_ignore = true,
-        --     follow = true,
-        --   },
-        --   live_grep = {
-        --     file_ignore_patterns = {
-        --       '%.lock$',
-        --       '%-lock%..*$',
-        --       '.git/',
-        --       'node_modules/',
-        --     },
-        --     additional_args = { '--hidden' },
-        --   },
-        -- },
+        defaults = {
+          file_ignore_patterns = { '.git/', 'node_modules/' },
+          mappings = {
+            i = {
+              -- ['<c-enter>'] = 'to_fuzzy_refine',
+              ['<C-h>'] = 'which_key',
+              ['<c-d>'] = require('telescope.actions').delete_buffer,
+            },
+            n = {
+              ['<c-d>'] = require('telescope.actions').delete_buffer,
+            },
+          },
+        },
+        pickers = {
+          find_files = {
+            hidden = true,
+            -- no_ignore = true,
+            follow = true,
+          },
+          live_grep = {
+            file_ignore_patterns = {
+              '%.lock$',
+              '%-lock%..*$',
+              '.git/',
+              'node_modules/',
+            },
+            additional_args = { '--hidden' },
+          },
+        },
         extensions = {
           ['ui-select'] = {
             require('telescope.themes').get_dropdown(),
@@ -763,7 +771,53 @@ require('lazy').setup({
         mode = '',
         desc = '[F]ormat buffer',
       },
+      {
+        '<leader>uf',
+        function()
+          vim.g.disable_autoformat = not vim.g.disable_autoformat
+          print('Global autoformatting ' .. (vim.g.disable_autoformat and 'disabled' or 'enabled'))
+        end,
+        mode = 'n',
+        desc = 'Toggle Auto Format (Global)',
+      },
+      {
+        '<leader>uF',
+        function()
+          vim.b.disable_autoformat = not vim.b.disable_autoformat
+          print('Buffer autoformatting ' .. (vim.b.disable_autoformat and 'disabled' or 'enabled'))
+        end,
+        mode = 'n',
+        desc = 'Toggle Auto Format (Buffer)',
+      },
+      -- {
+      --   '<leader>ufs',
+      --   function()
+      --     local global_status = vim.g.disable_autoformat and 'disabled' or 'enabled'
+      --     local buffer_status = vim.b.disable_autoformat and 'disabled' or 'enabled'
+      --     print(string.format('Global autoformatting: %s', global_status))
+      --     print(string.format('Buffer autoformatting: %s', buffer_status))
+      --   end,
+      --   mode = 'n',
+      --   desc = 'Show Auto Format Status',
+      -- },
     },
+    vim.api.nvim_create_user_command('FormatDisable', function(args)
+      if args.bang then
+        -- FormatDisable! will disable formatting just for this buffer
+        vim.b.disable_autoformat = true
+      else
+        vim.g.disable_autoformat = true
+      end
+    end, {
+      desc = 'Disable autoformat-on-save',
+      bang = true,
+    }),
+    vim.api.nvim_create_user_command('FormatEnable', function()
+      vim.b.disable_autoformat = false
+      vim.g.disable_autoformat = false
+    end, {
+      desc = 'Re-enable autoformat-on-save',
+    }),
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
@@ -771,6 +825,9 @@ require('lazy').setup({
         -- have a well standardized coding style. You can add additional
         -- languages here or re-enable it for the disabled ones.
         local disable_filetypes = { c = true, cpp = true }
+        if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+          return
+        end
         return {
           timeout_ms = 500,
           lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
@@ -911,18 +968,18 @@ require('lazy').setup({
           --
           -- <c-l> will move you to the right of each of the expansion locations.
           -- <c-h> is similar, except moving you backwards.
-          ['<Tab>'] = cmp.mapping(function(fallback)
-            if luasnip.expand_or_locally_jumpable() then
-              luasnip.expand_or_jump()
-            else
-              local copilot_accept = vim.fn['copilot#Accept'] ''
-              if copilot_accept ~= '' then
-                vim.api.nvim_feedkeys(copilot_accept, 'i', true)
-              else
-                fallback()
-              end
-            end
-          end, { 'i', 's' }),
+          -- ['<Tab>'] = cmp.mapping(function(fallback)
+          --   if luasnip.expand_or_locally_jumpable() then
+          --     luasnip.expand_or_jump()
+          --   else
+          --     local copilot_accept = vim.fn['copilot#Accept'] ''
+          --     if copilot_accept ~= '' then
+          --       vim.api.nvim_feedkeys(copilot_accept, 'i', true)
+          --     else
+          --       fallback()
+          --     end
+          --   end
+          -- end, { 'i', 's' }),
           ['<S-Tab>'] = cmp.mapping(function()
             if luasnip.locally_jumpable(-1) then
               luasnip.jump(-1)

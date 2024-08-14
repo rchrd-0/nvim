@@ -11,7 +11,18 @@ return {
     lazy = false,
     opts = {
       style = 'night',
-      -- dim_inactive = true,
+      dim_inactive = true,
+      on_highlights = function(hl, colors)
+        -- local util = require 'tokyonight.util'
+        hl.LineNrAbove = {
+          fg = colors.comment,
+          -- fg = util.lighten(colors.fg_gutter, 0.7),
+        }
+        hl.LineNrBelow = {
+          fg = colors.comment,
+          --   -- fg = util.lighten(colors.fg_gutter, 0.7),
+        }
+      end,
     },
     init = function()
       vim.cmd.colorscheme 'tokyonight'
@@ -58,6 +69,22 @@ return {
     lazy = false,
     -- init = function()
     --   vim.cmd.colorscheme 'rose-pine'
+    --   vim.cmd.hi 'Comment gui=none'
+    -- end,
+  },
+  {
+    'catppuccin/nvim',
+    name = 'catppuccin',
+    priority = 1000,
+    lazy = false,
+    opts = {
+      flavour = 'mocha',
+      dim_inactive = {
+        enabled = true,
+      },
+    },
+    -- init = function()
+    --   vim.cmd.colorscheme 'catppuccin'
     --   vim.cmd.hi 'Comment gui=none'
     -- end,
   },
