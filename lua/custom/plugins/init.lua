@@ -18,10 +18,6 @@ return {
     'windwp/nvim-ts-autotag',
     opts = {},
   },
-  -- {
-  --   'HiPhish/rainbow-delimiters.nvim',
-  --   opts = {},
-  -- },
   {
     'luckasRanarison/tailwind-tools.nvim',
     dependencies = { 'nvim-treesitter/nvim-treesitter' },
@@ -37,25 +33,25 @@ return {
       },
     },
   },
-  {
-    'kdheepak/lazygit.nvim',
-    cmd = {
-      'LazyGit',
-      'LazyGitConfig',
-      'LazyGitCurrentFile',
-      'LazyGitFilter',
-      'LazyGitFilterCurrentFile',
-    },
-    -- optional for floating window border decoration
-    dependencies = {
-      'nvim-lua/plenary.nvim',
-    },
-    -- setting the keybinding for LazyGit with 'keys' is recommended in
-    -- order to load the plugin when the command is run for the first time
-    keys = {
-      { '<leader>lg', '<cmd>LazyGit<cr>', desc = '[L]azy[G]it' },
-    },
-  },
+  -- {
+  --   'kdheepak/lazygit.nvim',
+  --   cmd = {
+  --     'LazyGit',
+  --     'LazyGitConfig',
+  --     'LazyGitCurrentFile',
+  --     'LazyGitFilter',
+  --     'LazyGitFilterCurrentFile',
+  --   },
+  --   -- optional for floating window border decoration
+  --   dependencies = {
+  --     'nvim-lua/plenary.nvim',
+  --   },
+  --   -- setting the keybinding for LazyGit with 'keys' is recommended in
+  --   -- order to load the plugin when the command is run for the first time
+  --   keys = {
+  --     { '<leader>lg', '<cmd>LazyGit<cr>', desc = '[L]azy[G]it' },
+  --   },
+  -- },
   {
     'joeldotdias/jsdoc-switch.nvim',
     ft = { -- Add or remove filetypes from this section depending on your requirements
@@ -102,5 +98,41 @@ return {
         desc = 'Quickfix List (Trouble)',
       },
     },
+  },
+  {
+    'rmagatti/auto-session',
+    lazy = false,
+    dependencies = {
+      'nvim-telescope/telescope.nvim', -- Only needed if you want to use sesssion lens
+    },
+    keys = {
+      -- Will use Telescope if installed or a vim.ui.select picker otherwise
+      { '<leader>wr', '<cmd>SessionSearch<CR>', desc = 'Session search' },
+      { '<leader>ws', '<cmd>SessionSave<CR>', desc = 'Save session' },
+      { '<leader>wa', '<cmd>SessionToggleAutoSave<CR>', desc = 'Toggle autosave' },
+    },
+    config = function()
+      require('auto-session').setup {
+        auto_session_suppress_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
+        session_lens = {
+          -- If load_on_setup is false, make sure you use `:SessionSearch` to open the picker as it will initialize everything first
+          load_on_setup = true,
+          theme_conf = { border = true },
+          previewer = false,
+          mappings = {
+            -- Mode can be a string or a table, e.g. {"i", "n"} for both insert and normal mode
+            delete_session = { 'i', '<C-D>' },
+            alternate_session = { 'i', '<C-S>' },
+          },
+        },
+      }
+    end,
+  },
+  {
+    'stevearc/oil.nvim',
+    opts = {},
+    -- Optional dependencies
+    dependencies = { { 'echasnovski/mini.icons', opts = {} } },
+    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
   },
 }

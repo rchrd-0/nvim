@@ -24,10 +24,10 @@ return {
         }
       end,
     },
-    init = function()
-      vim.cmd.colorscheme 'tokyonight'
-      vim.cmd.hi 'Comment gui=none'
-    end,
+    -- init = function()
+    -- vim.cmd.colorscheme 'tokyonight'
+    -- vim.cmd.hi 'Comment gui=none'
+    -- end,
   },
   {
     'rebelot/kanagawa.nvim',
@@ -57,10 +57,10 @@ return {
         },
       },
     },
-    -- init = function()
-    --   vim.cmd.colorscheme 'kanagawa'
-    --   vim.cmd.hi 'Comment gui=none'
-    -- end,
+    init = function()
+      vim.cmd.colorscheme 'kanagawa'
+      vim.cmd.hi 'Comment gui=none'
+    end,
   },
   {
     'rose-pine/neovim',
