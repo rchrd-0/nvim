@@ -130,9 +130,30 @@ return {
   },
   {
     'stevearc/oil.nvim',
-    opts = {},
-    -- Optional dependencies
-    dependencies = { { 'echasnovski/mini.icons', opts = {} } },
-    -- dependencies = { "nvim-tree/nvim-web-devicons" }, -- use if prefer nvim-web-devicons
+    dependencies = { 'nvim-tree/nvim-web-devicons' }, -- use if prefer nvim-web-devicons
+    config = function()
+      require('oil').setup {
+        default_file_explorer = false,
+        view_options = {
+          show_hidden = true,
+        },
+        keymaps = {
+          ['<C-s>'] = false,
+          ['<C-h>'] = false,
+          ['<C-t>'] = false,
+          ['<C-l>'] = false,
+          ['<C-o>v'] = { 'actions.select', opts = { vertical = true }, desc = 'Open the entry in a vertical split' },
+          ['<C-o>s'] = { 'actions.select', opts = { horizontal = true }, desc = 'Open the entry in a horizontal split' },
+          ['<C-o>r'] = { 'actions.refresh', desc = '[R]efresh' },
+        },
+        float = {
+          win_options = {
+            winblend = 0,
+          },
+        },
+      }
+      -- vim.keymap.set('n', '\\', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
+      vim.keymap.set('n', '<C-\\>', require('oil').toggle_float, { desc = 'Open parent directory in Oil' })
+    end,
   },
 }

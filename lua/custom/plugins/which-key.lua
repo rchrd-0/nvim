@@ -22,6 +22,7 @@ return { -- Useful plugin to show you pending keybinds.
       { '<leader>jss', desc = '[S]tart [JS]Doc checking' },
       { '<leader>jse', desc = '[E]nd [JSD]oc checking' },
       { '<leader>cc', group = '[Copilot] [C]hat' },
+      { '<C-o>', group = '[O]il' },
     }
   end,
 }
