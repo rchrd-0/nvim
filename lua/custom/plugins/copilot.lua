@@ -1,33 +1,50 @@
 return {
+  -- {
+  --   'zbirenbaum/copilot.lua',
+  --   cmd = 'Copilot',
+  --   event = 'InsertEnter',
+  --   build = ':Copilot auth',
+  --   opts = {
+  --     suggestion = {
+  --       auto_trigger = true,
+  --       keymap = {
+  --         accept = '<M-l>',
+  --         accept_word = false,
+  --         accept_line = false,
+  --         next = '<M-]>',
+  --         prev = '<M-[>',
+  --         dismiss = '<C-]>',
+  --       },
+  --     },
+  --   },
+  -- },
   {
-    'zbirenbaum/copilot.lua',
-    cmd = 'Copilot',
-    event = 'InsertEnter',
-    build = ':Copilot auth',
-    opts = {
-      suggestion = {
-        auto_trigger = true,
-      },
-    },
+    'supermaven-inc/supermaven-nvim',
+    config = function()
+      require('supermaven-nvim').setup {
+        keymaps = {
+          accept_suggestion = '<M-l>',
+          accept_word = '<M-.>',
+        },
+      }
+    end,
   },
   {
     'CopilotC-Nvim/CopilotChat.nvim',
     branch = 'canary',
     dependencies = {
-      { 'zbirenbaum/copilot.lua' }, -- or github/copilot.vim
-      { 'nvim-lua/plenary.nvim' }, -- for curl, log wrapper
+      { 'zbirenbaum/copilot.lua' },
+      { 'nvim-lua/plenary.nvim' },
     },
     opts = {
-      debug = true, -- Enable debugging
+      debug = true,
       model = 'gpt-4o',
       buffers = 'buffers',
 
       window = {
         width = 0.5,
       },
-      -- See Configuration section for rest
     },
-    -- See Commands section for default commands if you want to lazy load on them
   },
 
   vim.api.nvim_set_keymap('n', '<leader>cct', ':CopilotChatToggle<CR>', { desc = '[C]opilot [C]hat [T]oggle', noremap = true, silent = true }),
