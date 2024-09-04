@@ -8,6 +8,10 @@ return {
   } },
   {
     'christoomey/vim-tmux-navigator',
+    init = function()
+      -- Disable default mappings
+      vim.g.tmux_navigator_no_mappings = 1
+    end,
     vim.keymap.set('n', '<M-h>', ':TmuxNavigateLeft<CR>', { noremap = true, silent = true }),
     vim.keymap.set('n', '<M-j>', ':TmuxNavigateDown<CR>', { noremap = true, silent = true }),
     vim.keymap.set('n', '<M-k>', ':TmuxNavigateUp<CR>', { noremap = true, silent = true }),
@@ -145,6 +149,7 @@ return {
           ['<C-o>v'] = { 'actions.select', opts = { vertical = true }, desc = 'Open the entry in a vertical split' },
           ['<C-o>s'] = { 'actions.select', opts = { horizontal = true }, desc = 'Open the entry in a horizontal split' },
           ['<C-o>r'] = { 'actions.refresh', desc = '[R]efresh' },
+          -- ['q'] = { 'actions.close' },
         },
         float = {
           win_options = {
@@ -153,7 +158,97 @@ return {
         },
       }
       -- vim.keymap.set('n', '\\', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
-      vim.keymap.set('n', '<C-\\>', require('oil').toggle_float, { desc = 'Open parent directory in Oil' })
+      vim.keymap.set('n', '<leader>\\', require('oil').toggle_float, { desc = 'Open parent directory in Oil' })
     end,
+  },
+  -- lazy.nvim
+  {
+    'folke/noice.nvim',
+    event = 'VeryLazy',
+    opts = {
+      messages = {
+        enabled = true,
+      },
+      routes = {
+        {
+          view = 'notify',
+          filter = { event = 'msg_showmode' },
+        },
+        -- {
+        --   view = 'split',
+        --   filter = { event = 'msg_show', min_height = 5 },
+        -- },
+      },
+      lsp = {
+        -- override markdown rendering so that **cmp** and other plugins use **Treesitter**
+        override = {
+          ['vim.lsp.util.convert_input_to_markdown_lines'] = true,
+          ['vim.lsp.util.stylize_markdown'] = true,
+          ['cmp.entry.get_documentation'] = true, -- requires hrsh7th/nvim-cmp
+        },
+      },
+      -- you can enable a preset for easier configuration
+      presets = {
+        bottom_search = true, -- use a classic bottom cmdline for search
+        command_palette = false, -- position the cmdline and popupmenu together
+        long_message_to_split = true, -- long messages will be sent to a split
+        inc_rename = false, -- enables an input dialog for inc-rename.nvim
+        lsp_doc_border = false, -- add a border to hover docs and signature help
+      },
+
+      views = {
+        -- cmdline_popup = {
+        --   position = {
+        --     row = 20,
+        --     col = '50%',
+        --   },
+        --   border = {
+        --     style = 'rounded',
+        --     -- padding = { 1, 2 },
+        --   },
+        -- },
+        cmdline_popup = {
+          position = {
+            row = 15,
+            col = '50%',
+          },
+          size = {
+            width = 60,
+            height = 'auto',
+          },
+          border = {
+            style = 'none',
+            padding = { 1, 1 },
+          },
+        },
+        popupmenu = {
+          relative = 'editor',
+          position = {
+            row = 17,
+            col = '50%',
+          },
+          size = {
+            width = 60,
+            height = 10,
+          },
+          border = {
+            style = 'none',
+            padding = { 1, 1 },
+          },
+          win_options = {
+            winhighlight = { Normal = 'Normal', FloatBorder = 'DiagnosticInfo' },
+          },
+        },
+      },
+      -- add any options here
+    },
+    dependencies = {
+      -- if you lazy-load any plugin below, make sure to add proper `module="..."` entries
+      'MunifTanjim/nui.nvim',
+      -- OPTIONAL:
+      --   `nvim-notify` is only needed, if you want to use the notification view.
+      --   If not available, we use `mini` as the fallback
+      -- 'rcarriga/nvim-notify',
+    },
   },
 }

@@ -15,8 +15,8 @@ return {
   { 'n', '<M-k>', ':wincmd k<CR>', { desc = 'Move focus to the upper window' } },
   { 'n', '<M-w>', '<C-w>w', { desc = 'Move focus to the next window' } },
 
-  { 'v', 'J', ":m '>+1<CR>gv=gv" },
-  { 'v', 'K', ":m '<-2<CR>gv=gv" },
+  { 'v', 'J', ":m '>+1<CR>gv=gv", { silent = true } },
+  { 'v', 'K', ":m '<-2<CR>gv=gv", { silent = true } },
   { 'n', 'J', 'mzJ`z' },
   { 'n', '<C-d>', '<C-d>zz' },
   { 'n', '<C-u>', '<C-u>zz' },

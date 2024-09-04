@@ -100,7 +100,11 @@ vim.g.have_nerd_font = true
 
 vim.opt.number = true
 vim.opt.relativenumber = true
+
 vim.opt.mouse = 'a'
+vim.api.nvim_command 'aunmenu PopUp.How-to\\ disable\\ mouse'
+vim.api.nvim_command 'aunmenu PopUp.-1-'
+
 vim.opt.showmode = false
 -- vim.opt.clipboard = 'unnamedplus'
 vim.opt.breakindent = true
@@ -205,7 +209,6 @@ require('lazy').setup({
   --    require('Comment').setup({})
 
   -- "gc" to comment visual regions/lines
-  -- { 'github/copilot.vim' },
   {
     'numToStr/Comment.nvim',
     config = function()
@@ -899,6 +902,12 @@ require('lazy').setup({
           --     end
           --   end
           -- end, { 'i', 's' }),
+
+          ['<Tab>'] = cmp.mapping(function()
+            if luasnip.expand_or_locally_jumpable() then
+              luasnip.expand_or_jump()
+            end
+          end, { 'i', 's' }),
           ['<S-Tab>'] = cmp.mapping(function()
             if luasnip.locally_jumpable(-1) then
               luasnip.jump(-1)
@@ -912,6 +921,7 @@ require('lazy').setup({
           { name = 'nvim_lsp' },
           { name = 'luasnip' },
           { name = 'path' },
+          -- { name = 'supermaven' },
         },
       }
     end,

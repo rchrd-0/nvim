@@ -4,7 +4,6 @@ return {
     -- change the command in the config to whatever the name of that colorscheme is.
     --
     -- If you want to see what colorschemes are already installed, you can use `:Telescope colorscheme`.
-    -- 'rebelot/kanagawa.nvim',
     'folke/tokyonight.nvim',
     name = 'tokyonight',
     priority = 1000, -- Make sure to load this before all the other start plugins.

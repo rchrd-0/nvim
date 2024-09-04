@@ -11,7 +11,13 @@ return {
   },
   cmd = 'Neotree',
   keys = {
-    { '\\', ':Neotree reveal right<CR>', { desc = 'NeoTree reveal' } },
+    {
+      '\\',
+      function()
+        vim.cmd 'Neotree reveal right'
+      end,
+      desc = 'NeoTree reveal',
+    },
   },
   opts = {
     filesystem = {
