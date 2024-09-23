@@ -8,14 +8,14 @@ return {
       suggestion = {
         enabled = false,
         auto_trigger = true,
-        -- keymap = {
-        --   accept = '<M-l>',
-        --   accept_word = false,
-        --   accept_line = false,
-        --   next = '<M-]>',
-        --   prev = '<M-[>',
-        --   dismiss = '<C-]>',
-        -- },
+        keymap = {
+          accept = '<M-l>',
+          accept_word = '<M-.>',
+          accept_line = false,
+          next = '<M-]>',
+          prev = '<M-[>',
+          dismiss = '<C-]>',
+        },
       },
     },
   },
@@ -44,11 +44,8 @@ return {
     opts = {
       debug = true,
       model = 'gpt-4o',
-      buffers = 'buffers',
       auto_follow_cursor = false,
-      -- window = {
-      --   width = 0.5,
-      -- },
+      show_help = true,
       mappings = {
         submit_prompt = {
           normal = '<CR>',
@@ -159,7 +156,7 @@ return {
     keys = {
       -- Show help actions with telescope
       {
-        '<leader>a\\',
+        '<leader>ah',
         function()
           local actions = require 'CopilotChat.actions'
           require('CopilotChat.integrations.telescope').pick(actions.help_actions())

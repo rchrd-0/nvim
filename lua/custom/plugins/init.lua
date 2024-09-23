@@ -146,6 +146,7 @@ return {
           ['<C-h>'] = false,
           ['<C-t>'] = false,
           ['<C-l>'] = false,
+          ['<BS>'] = { 'actions.parent', desc = 'Open parent directory' },
           ['<C-o>v'] = { 'actions.select', opts = { vertical = true }, desc = 'Open the entry in a vertical split' },
           ['<C-o>s'] = { 'actions.select', opts = { horizontal = true }, desc = 'Open the entry in a horizontal split' },
           ['<C-o>r'] = { 'actions.refresh', desc = '[R]efresh' },
@@ -217,14 +218,23 @@ return {
             height = 'auto',
           },
           border = {
-            style = 'none',
-            padding = { 1, 1 },
+            style = 'rounded',
+            -- padding = { 0, 1 },
+            -- text = {
+            --   top = 'ASDFS',
+            --   top_align = 'center',
+            --   bottom = 'ASDFASDF',
+            --   bottom_align = 'center',
+            -- },
+          },
+          win_options = {
+            winhighlight = { FloatTitle = '' },
           },
         },
         popupmenu = {
           relative = 'editor',
           position = {
-            row = 17,
+            row = 18,
             col = '50%',
           },
           size = {
@@ -232,8 +242,8 @@ return {
             height = 10,
           },
           border = {
-            style = 'none',
-            padding = { 1, 1 },
+            style = 'rounded',
+            -- padding = { 1, 1 },
           },
           win_options = {
             winhighlight = { Normal = 'Normal', FloatBorder = 'DiagnosticInfo' },
@@ -251,4 +261,17 @@ return {
       -- 'rcarriga/nvim-notify',
     },
   },
+  -- {
+  --   'norcalli/nvim-colorizer.lua',
+  --   opts = {
+  --     'css',
+  --     'javascript',
+  --     'javascriptreact',
+  --     'typescript',
+  --     'typescriptreact',
+  --     'vue',
+  --     'html',
+  --   },
+  --   mode = 'background',
+  -- },
 }
