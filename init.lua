@@ -42,6 +42,9 @@ vim.opt.smartindent = true
 vim.opt.autoindent = true
 vim.opt.autoread = true
 
+vim.opt.wildmode = 'longest:full,full'
+vim.opt.sessionoptions = { 'buffers', 'curdir', 'tabpages', 'winsize', 'help', 'globals', 'skiprtp', 'folds' }
+
 local keymaps = require 'custom.keymaps'
 for _, keymap in ipairs(keymaps) do
   vim.keymap.set(keymap[1], keymap[2], keymap[3], keymap[4])
@@ -73,6 +76,12 @@ if not vim.loop.fs_stat(lazypath) then
   vim.fn.system { 'git', 'clone', '--filter=blob:none', '--branch=stable', lazyrepo, lazypath }
 end ---@diagnostic disable-next-line: undefined-field
 vim.opt.rtp:prepend(lazypath)
+
+-- local function use_prettierd()
+--   local root = vim.fn.getcwd()
+--   local no_prettierd_marker = root .. '/.no-prettierd'
+--   return vim.fn.filereadable(no_prettierd_marker) ~= 1
+-- end
 
 require('lazy').setup({
   'tpope/vim-sleuth', -- Detect tabstop and shiftwidth automatically
@@ -128,6 +137,10 @@ require('lazy').setup({
       { 'nvim-tree/nvim-web-devicons', enabled = vim.g.have_nerd_font },
     },
     config = function()
+      -- :Telescope help_tags
+      --  - Insert mode: <c-/>
+      --  - Normal mode: ?
+      --
       require('telescope').setup {
         defaults = {
           file_ignore_patterns = { '.git/', 'node_modules/' },
@@ -228,6 +241,9 @@ require('lazy').setup({
       -- `neodev` configures Lua LSP for your Neovim config, runtime and plugins
       -- used for completion, annotations and signatures of Neovim apis
       { 'folke/neodev.nvim', opts = {} },
+    },
+    opts = {
+      inlay_hints = { enabled = true },
     },
     config = function()
       local lspconfig = require 'lspconfig'
@@ -345,11 +361,27 @@ require('lazy').setup({
             implicitProjectConfiguration = {
               checkJs = false,
             },
+            typescript = {
+              inlayHints = {
+                includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all'
+                includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+                includeInlayVariableTypeHints = false,
+                includeInlayFunctionParameterTypeHints = false,
+                includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+                includeInlayPropertyDeclarationTypeHints = false,
+                includeInlayFunctionLikeReturnTypeHints = false,
+                includeInlayEnumMemberValueHints = true,
+              },
+            },
           },
         },
         html = {
           filetypes = { 'html', 'ejs' },
+          init_options = {
+            -- provideFormatter = false,
+          },
         },
+        astro = {},
         emmet_language_server = {
           filetypes = {
             'html',
@@ -365,16 +397,24 @@ require('lazy').setup({
           },
         },
         cssls = {
-          -- filetypes = { 'html', 'css', 'scss', 'vue' },
+          -- filetypes = { 'html', 'css', 'scss', 'vue', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'svelte' },
           settings = {
             css = { validate = true, lint = { unknownAtRules = 'ignore' } },
             scss = { validate = true, lint = { unknownAtRules = 'ignore' } },
           },
         },
-        tailwindcss = {},
+        tailwindcss = {
+          filetypes = { 'html', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'vue', 'svelte', 'astro', 'css' },
+          settings = {
+            tailwindCSS = {
+              classAttributes = { 'class', 'className', 'class:list', 'classList', 'ngClass', '.*ClassName' },
+            },
+          },
+        },
         eslint = {},
         prettierd = {},
         volar = {},
+        -- biome = {},
 
         -- go
         gopls = {},
@@ -501,10 +541,26 @@ require('lazy').setup({
           'ruff_fix',
           'ruff_format',
         },
-        javascript = { 'prettierd', 'prettier', stop_after_first = true },
-        typescript = { 'prettierd', 'prettier', stop_after_first = true },
-        javascriptreact = { 'prettierd', 'prettier', stop_after_first = true },
-        typescriptreact = { 'prettierd', 'prettier', stop_after_first = true },
+        html = {
+          'prettierd',
+        },
+        css = {
+          'prettierd',
+        },
+        javascript = { 'prettierd', stop_after_first = true },
+        typescript = { 'prettierd', stop_after_first = true },
+        javascriptreact = { 'prettierd', stop_after_first = true },
+        typescriptreact = { 'prettierd', stop_after_first = true },
+        vue = { 'prettierd', stop_after_first = true },
+        astro = { 'prettierd', stop_after_first = true },
+        -- css = { 'prettierd', 'prettier', stop_after_first = true },
+        -- javascriptreact = function()
+        --   return use_prettierd() and { 'prettierd', 'prettier' } or { 'prettier' }
+        -- end,
+        -- typescriptreact = function()
+        --   return use_prettierd() and { 'prettierd', 'prettier' } or { 'prettier' }
+        -- end,
+        -- typescriptreact = { 'prettier', stop_after_first = true },
       },
       formatters = {
         ruff_fix = {
@@ -530,6 +586,11 @@ require('lazy').setup({
             '-',
           },
           stdin = true,
+        },
+        prettierd = {
+          env = {
+            PRETTIERD_DEFAULT_CONFIG = vim.fn.expand '~/.config/nvim/.prettierrc.json',
+          },
         },
       },
     },
@@ -649,11 +710,30 @@ require('lazy').setup({
     'nvim-treesitter/nvim-treesitter',
     build = ':TSUpdate',
     opts = {
-      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'vue', 'css', 'scss', 'php', 'go', 'jsdoc' },
+      ensure_installed = { 'bash', 'c', 'html', 'lua', 'luadoc', 'markdown', 'vim', 'vimdoc', 'vue', 'css', 'scss', 'php', 'go', 'jsdoc', 'javascript' },
       auto_install = true,
       highlight = {
         enable = true,
         additional_vim_regex_highlighting = { 'ruby' },
+        injection_queries = {
+          ['html'] = [=[
+          ((attribute
+            (attribute_name) @_attr
+            (quoted_attribute_value
+              (attribute_value) @javascript))
+            (#match? @_attr "^x-.*$"))
+          ((attribute
+            (attribute_name) @_attr
+            (quoted_attribute_value
+              (attribute_value) @javascript))
+            (#match? @_attr "^:.*$"))
+          ((attribute
+            (attribute_name) @_attr
+            (quoted_attribute_value
+              (attribute_value) @javascript))
+            (#match? @_attr "^@.*$"))
+        ]=],
+        },
       },
       indent = { enable = true, disable = { 'ruby' } },
       -- autotag = {
@@ -673,8 +753,8 @@ require('lazy').setup({
       ---@diagnostic disable-next-line: missing-fields
       require('nvim-treesitter.configs').setup(opts)
 
-      vim.treesitter.language.register('html', 'ejs')
-      vim.treesitter.language.register('javascript', 'ejs')
+      -- vim.treesitter.language.register('html', 'ejs')
+      -- vim.treesitter.language.register('javascript', 'ejs')
 
       vim.filetype.add {
         pattern = {
@@ -720,6 +800,12 @@ require('lazy').setup({
       start = '🚀',
       task = '📌',
       lazy = '💤 ',
+      diagnostics = {
+        Error = ' ',
+        Warn = ' ',
+        Hint = ' ',
+        Info = ' ',
+      },
     },
   },
 })

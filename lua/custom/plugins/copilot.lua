@@ -7,7 +7,7 @@ return {
     opts = {
       suggestion = {
         enabled = false,
-        auto_trigger = true,
+        auto_trigger = false,
         keymap = {
           accept = '<M-l>',
           accept_word = '<M-.>',
@@ -15,6 +15,10 @@ return {
           next = '<M-]>',
           prev = '<M-[>',
           dismiss = '<C-]>',
+        },
+        panel = {
+          enabled = false,
+          auto_refresh = false,
         },
       },
     },

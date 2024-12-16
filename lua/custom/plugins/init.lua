@@ -24,18 +24,62 @@ return {
   },
   {
     'luckasRanarison/tailwind-tools.nvim',
-    dependencies = { 'nvim-treesitter/nvim-treesitter' },
-    opts = {}, -- your configuration
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+      'nvim-telescope/telescope.nvim', -- optional
+      'neovim/nvim-lspconfig', -- optional
+    },
+    build = ':UpdateRemotePlugins',
+    -- opts = {}, -- your configuration
+    opts = {
+      server = {
+        override = false,
+        -- settings = {
+        --   classAttributes = { '.*ClassName' },
+        --   validate = true,
+        -- },
+      },
+    },
   },
   {
     'akinsho/bufferline.nvim',
+    event = 'VeryLazy',
     version = '*',
     dependencies = 'nvim-tree/nvim-web-devicons',
+
+    keys = {
+      { '<S-h>', '<cmd>BufferLineCyclePrev<cr>', desc = 'Prev Buffer' },
+      { '<S-l>', '<cmd>BufferLineCycleNext<cr>', desc = 'Next Buffer' },
+      { '[T', '<cmd>BufferLineMovePrev<cr>', desc = 'Move buffer prev' },
+      { ']T', '<cmd>BufferLineMoveNext<cr>', desc = 'Move buffer next' },
+      { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle Pin' },
+      { '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>', desc = 'Delete Non-Pinned Buffers' },
+      { '<leader>bo', '<Cmd>BufferLineCloseOthers<CR>', desc = 'Delete Other Buffers' },
+      { '<leader>br', '<Cmd>BufferLineCloseRight<CR>', desc = 'Delete Buffers to the Right' },
+      { '<leader>bl', '<Cmd>BufferLineCloseLeft<CR>', desc = 'Delete Buffers to the Left' },
+    },
     opts = {
       options = {
+        always_show_bufferline = true,
         show_buffer_close_icons = false,
+        diagnostics = 'nvim_lsp',
+        diagnostics_indicator = function(count, level, diagnostics_dict, context)
+          local icon = level:match 'error' and '  ' or level:match 'warning' and '  ' or '  '
+          return ' ' .. icon .. ' ' .. count
+        end,
       },
     },
+    config = function(_, opts)
+      require('bufferline').setup(opts)
+      -- Fix bufferline when restoring a session
+      vim.api.nvim_create_autocmd({ 'BufAdd', 'BufDelete' }, {
+        callback = function()
+          vim.schedule(function()
+            pcall(nvim_bufferline)
+          end)
+        end,
+      })
+    end,
   },
   -- {
   --   'kdheepak/lazygit.nvim',
@@ -56,16 +100,16 @@ return {
   --     { '<leader>lg', '<cmd>LazyGit<cr>', desc = '[L]azy[G]it' },
   --   },
   -- },
-  {
-    'joeldotdias/jsdoc-switch.nvim',
-    ft = { -- Add or remove filetypes from this section depending on your requirements
-      'javascript',
-      'javascriptreact',
-    },
-    config = function()
-      require('jsdoc-switch').setup() -- setup() must be called to create default keymaps
-    end,
-  },
+  -- {
+  --   'joeldotdias/jsdoc-switch.nvim',
+  --   ft = { -- Add or remove filetypes from this section depending on your requirements
+  --     'javascript',
+  --     'javascriptreact',
+  --   },
+  --   config = function()
+  --     require('jsdoc-switch').setup() -- setup() must be called to create default keymaps
+  --   end,
+  -- },
   {
     'folke/trouble.nvim',
     opts = {}, -- for default options, refer to the configuration section for custom setup.
@@ -146,7 +190,7 @@ return {
           ['<C-h>'] = false,
           ['<C-t>'] = false,
           ['<C-l>'] = false,
-          ['<BS>'] = { 'actions.parent', desc = 'Open parent directory' },
+          -- ['<BS>'] = { 'actions.parent', desc = 'Open parent directory' },
           ['<C-o>v'] = { 'actions.select', opts = { vertical = true }, desc = 'Open the entry in a vertical split' },
           ['<C-o>s'] = { 'actions.select', opts = { horizontal = true }, desc = 'Open the entry in a horizontal split' },
           ['<C-o>r'] = { 'actions.refresh', desc = '[R]efresh' },
@@ -261,6 +305,22 @@ return {
       -- 'rcarriga/nvim-notify',
     },
   },
+  -- {
+  --   'folke/flash.nvim',
+  --   event = 'VeryLazy',
+  --   opts = {},
+  --   -- stylua: ignore
+  --   keys = {
+  --     { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
+  --     { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
+  --     { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
+  --     { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
+  --     { "<M-e>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
+  --   },
+  -- },
+  -- {
+  --   'hiphish/rainbow-delimiters.nvim',
+  -- },
   -- {
   --   'norcalli/nvim-colorizer.lua',
   --   opts = {
