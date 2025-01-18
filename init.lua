@@ -1,5 +1,10 @@
 require 'custom.options'
 
+local keymaps = require 'custom.keymaps'
+for _, keymap in ipairs(keymaps) do
+  vim.keymap.set(keymap[1], keymap[2], keymap[3], keymap[4])
+end
+
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
   group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
