@@ -37,8 +37,7 @@ return {
   },
   {
     'CopilotC-Nvim/CopilotChat.nvim',
-    -- version = 'v2.11.0',
-    branch = 'canary',
+    -- version = 'v3.3.0',
     build = 'make tiktoken',
     dependencies = {
       { 'nvim-telescope/telescope.nvim' }, -- telescope for help actions
@@ -47,7 +46,7 @@ return {
     },
     opts = {
       debug = true,
-      model = 'gpt-4o',
+      model = 'claude-3.5-sonnet',
       auto_follow_cursor = false,
       show_help = true,
       mappings = {
@@ -69,10 +68,10 @@ return {
         show_diff = {
           normal = 'gmd',
         },
-        show_system_prompt = {
+        show_info = {
           normal = 'gmp',
         },
-        show_user_selection = {
+        show_context = {
           normal = 'gms',
         },
       },

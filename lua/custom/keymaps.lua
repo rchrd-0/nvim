@@ -29,6 +29,7 @@ return {
   { 'n', '<M-]>', ':buffer #<CR>', { desc = 'Switch to the alternate buffer', silent = true } },
 
   { 'n', '<C-W>O', close_all_buffers_but_current, { desc = 'Close all buffers except current', noremap = true, silent = true } },
+  { 'n', '<leader>bd', ':lua MiniBufremove.delete()<CR>', { desc = '[B]uffer [d]elete' } },
 
   -- diagnostics
   { 'n', '[d', vim.diagnostic.goto_prev, { desc = 'Go to previous [D]iagnostic message' } },
