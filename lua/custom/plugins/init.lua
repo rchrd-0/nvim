@@ -1,5 +1,9 @@
--- You can add your own plugins here or in other files in this directory!
---  I promise not to create any merge conflicts in this directory :)
---
--- See the kickstart.nvim README for more information
-return {}
+return {
+  {
+    'christoomey/vim-tmux-navigator',
+    init = function()
+      -- Disable default mappings
+      vim.g.tmux_navigator_no_mappings = 1
+    end,
+  },
+}
