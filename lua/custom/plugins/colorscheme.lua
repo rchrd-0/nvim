@@ -23,10 +23,10 @@ return {
         }
       end,
     },
-    -- init = function()
-    -- vim.cmd.colorscheme 'tokyonight'
-    -- vim.cmd.hi 'Comment gui=none'
-    -- end,
+    init = function()
+      vim.cmd.colorscheme 'tokyonight'
+      vim.cmd.hi 'Comment gui=none'
+    end,
   },
   {
     'rebelot/kanagawa.nvim',
@@ -56,10 +56,10 @@ return {
         },
       },
     },
-    init = function()
-      vim.cmd.colorscheme 'kanagawa'
-      vim.cmd.hi 'Comment gui=none'
-    end,
+    -- init = function()
+    --   vim.cmd.colorscheme 'kanagawa'
+    --   vim.cmd.hi 'Comment gui=none'
+    -- end,
   },
   {
     'rose-pine/neovim',
@@ -70,6 +70,12 @@ return {
     --   vim.cmd.colorscheme 'rose-pine'
     --   vim.cmd.hi 'Comment gui=none'
     -- end,
+    opts = {
+      dim_inactive_windows = true,
+      styles = {
+        italic = false,
+      },
+    },
   },
   {
     'catppuccin/nvim',

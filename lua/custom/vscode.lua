@@ -63,11 +63,40 @@ vim.opt.rtp:prepend(lazypath)
 -- Setup lazy.nvim
 require('lazy').setup {
   spec = {
+    { 'nvim-treesitter/nvim-treesitter' },
     {
       'echasnovski/mini.nvim',
       config = function()
         require('mini.surround').setup()
+        require('mini.ai').setup()
+        require('mini.move').setup {
+          left = '',
+          right = '',
+          line_left = '',
+          line_right = '',
+          down = 'J',
+          up = 'K',
+        }
+        end,
+        },
+          {
+          'numToStr/Comment.nvim',
+          config = function()
+          line_down = '',
+          ---@diagnostic disable-next-line: missing-fields
+          require('Comment').setup {
+          line_up = '',
+          pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+        }
       end,
+      opts = {},
+      dependencies = {
+        'nvim-treesitter/nvim-treesitter',
+        'JoosepAlviste/nvim-ts-context-commentstring',
+      },
     },
+    { 'JoosepAlviste/nvim-ts-context-commentstring', opts = {
+      enable_autocmd = false,
+    } },
   },
 }

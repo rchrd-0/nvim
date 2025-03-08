@@ -27,7 +27,7 @@ return {
     'supermaven-inc/supermaven-nvim',
     config = function()
       require('supermaven-nvim').setup {
-        -- disable_inline_completion = true,
+        disable_inline_completion = false,
         keymaps = {
           accept_suggestion = '<M-l>',
           accept_word = '<M-.>',
@@ -46,7 +46,7 @@ return {
     },
     opts = {
       debug = true,
-      model = 'claude-3.5-sonnet',
+      model = 'claude-3.7-sonnet',
       auto_follow_cursor = false,
       show_help = true,
       mappings = {
@@ -237,9 +237,9 @@ return {
         desc = 'CopilotChat - Quick chat',
       },
       -- Debug
-      { '<leader>ad', '<cmd>CopilotChatDebugInfo<cr>', desc = 'CopilotChat - [D]ebug Info' },
+      -- { '<leader>ad', '<cmd>CopilotChatDebugInfo<cr>', desc = 'CopilotChat - [D]ebug Info' },
       -- Fix the issue with diagnostic
-      { '<leader>af', '<cmd>CopilotChatFixDiagnostic<cr>', desc = 'CopilotChat - [F]ix Diagnostic' },
+      { '<leader>af', '<cmd>CopilotChatFix<cr>', desc = 'CopilotChat - [F]ix Diagnostic' },
       -- Clear buffer and chat history
       { '<leader>al', '<cmd>CopilotChatReset<cr>', desc = 'CopilotChat - Clear buffer and chat history' },
       -- Toggle Copilot Chat Vsplit

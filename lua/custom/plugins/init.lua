@@ -54,7 +54,7 @@ return {
       { ']T', '<cmd>BufferLineMoveNext<cr>', desc = 'Move buffer next' },
       { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle Pin' },
       { '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>', desc = 'Delete Non-Pinned Buffers' },
-      { '<leader>bo', '<Cmd>BufferLineCloseOthers<CR>', desc = 'Delete Other Buffers' },
+      -- { '<leader>bo', '<Cmd>BufferLineCloseOthers<CR>', desc = 'Delete Other Buffers' },
       { '<leader>br', '<Cmd>BufferLineCloseRight<CR>', desc = 'Delete Buffers to the Right' },
       { '<leader>bl', '<Cmd>BufferLineCloseLeft<CR>', desc = 'Delete Buffers to the Left' },
     },
@@ -81,35 +81,6 @@ return {
       })
     end,
   },
-  -- {
-  --   'kdheepak/lazygit.nvim',
-  --   cmd = {
-  --     'LazyGit',
-  --     'LazyGitConfig',
-  --     'LazyGitCurrentFile',
-  --     'LazyGitFilter',
-  --     'LazyGitFilterCurrentFile',
-  --   },
-  --   -- optional for floating window border decoration
-  --   dependencies = {
-  --     'nvim-lua/plenary.nvim',
-  --   },
-  --   -- setting the keybinding for LazyGit with 'keys' is recommended in
-  --   -- order to load the plugin when the command is run for the first time
-  --   keys = {
-  --     { '<leader>lg', '<cmd>LazyGit<cr>', desc = '[L]azy[G]it' },
-  --   },
-  -- },
-  -- {
-  --   'joeldotdias/jsdoc-switch.nvim',
-  --   ft = { -- Add or remove filetypes from this section depending on your requirements
-  --     'javascript',
-  --     'javascriptreact',
-  --   },
-  --   config = function()
-  --     require('jsdoc-switch').setup() -- setup() must be called to create default keymaps
-  --   end,
-  -- },
   {
     'folke/trouble.nvim',
     opts = {}, -- for default options, refer to the configuration section for custom setup.
@@ -156,12 +127,13 @@ return {
     keys = {
       -- Will use Telescope if installed or a vim.ui.select picker otherwise
       { '<leader>wr', '<cmd>SessionSearch<CR>', desc = 'Session search' },
-      { '<leader>ws', '<cmd>SessionSave<CR>', desc = 'Save session' },
+      { '<leader>wv', '<cmd>SessionSave<CR>', desc = 'Save session' },
       { '<leader>wa', '<cmd>SessionToggleAutoSave<CR>', desc = 'Toggle autosave' },
     },
     config = function()
       require('auto-session').setup {
         auto_session_suppress_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
+        bypass_save_filetypes = { '', 'netrw' },
         session_lens = {
           -- If load_on_setup is false, make sure you use `:SessionSearch` to open the picker as it will initialize everything first
           load_on_setup = true,
@@ -170,7 +142,7 @@ return {
           mappings = {
             -- Mode can be a string or a table, e.g. {"i", "n"} for both insert and normal mode
             delete_session = { 'i', '<C-D>' },
-            alternate_session = { 'i', '<C-S>' },
+            alternate_session = { 'i', '<C-A>' },
           },
         },
       }
@@ -202,8 +174,8 @@ return {
           },
         },
       }
-      -- vim.keymap.set('n', '\\', '<CMD>Oil<CR>', { desc = 'Open parent directory' })
-      vim.keymap.set('n', '<leader>\\', require('oil').toggle_float, { desc = 'Open parent directory in Oil' })
+      vim.keymap.set('n', '<leader>\\', require('oil').open, { desc = 'Open parent directory in Oil' })
+      vim.keymap.set('n', '\\', require('oil').toggle_float, { desc = 'Toggle Oil float' })
     end,
   },
   -- lazy.nvim
@@ -305,6 +277,25 @@ return {
       -- 'rcarriga/nvim-notify',
     },
   },
+  {
+    'toppair/peek.nvim',
+    event = { 'VeryLazy' },
+    build = 'deno task --quiet build:fast',
+    config = function()
+      require('peek').setup()
+      vim.api.nvim_create_user_command('PeekOpen', require('peek').open, {})
+      vim.api.nvim_create_user_command('PeekClose', require('peek').close, {})
+    end,
+  },
+  {
+    'mistweaverco/kulala.nvim',
+    keys = { '<leader>Rs', '<leader>Ra', '<leader>Ro' },
+    ft = { 'http', 'rest' },
+    opts = {
+      -- your configuration comes here
+      global_keymaps = true,
+    },
+  },
   -- {
   --   'folke/flash.nvim',
   --   event = 'VeryLazy',
@@ -317,21 +308,5 @@ return {
   --     { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
   --     { "<M-e>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
   --   },
-  -- },
-  -- {
-  --   'hiphish/rainbow-delimiters.nvim',
-  -- },
-  -- {
-  --   'norcalli/nvim-colorizer.lua',
-  --   opts = {
-  --     'css',
-  --     'javascript',
-  --     'javascriptreact',
-  --     'typescript',
-  --     'typescriptreact',
-  --     'vue',
-  --     'html',
-  --   },
-  --   mode = 'background',
   -- },
 }

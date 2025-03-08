@@ -13,8 +13,6 @@ vim.opt.number = true
 vim.opt.relativenumber = true
 
 vim.opt.mouse = 'a'
-vim.api.nvim_command 'aunmenu PopUp.How-to\\ disable\\ mouse'
-vim.api.nvim_command 'aunmenu PopUp.-1-'
 
 vim.opt.showmode = false
 -- vim.opt.clipboard = 'unnamedplus'
@@ -45,6 +43,8 @@ vim.opt.autoread = true
 vim.opt.wildmode = 'longest:full,full'
 vim.opt.sessionoptions = { 'buffers', 'curdir', 'tabpages', 'winsize', 'help', 'globals', 'skiprtp', 'folds' }
 
+require('custom.commands').setup()
+
 local keymaps = require 'custom.keymaps'
 for _, keymap in ipairs(keymaps) do
   vim.keymap.set(keymap[1], keymap[2], keymap[3], keymap[4])
@@ -52,23 +52,6 @@ end
 
 vim.opt.hlsearch = true
 vim.keymap.set('n', '<Esc>', '<cmd>nohlsearch<CR>')
-
-vim.api.nvim_create_autocmd('TextYankPost', {
-  desc = 'Highlight when yanking (copying) text',
-  group = vim.api.nvim_create_augroup('kickstart-highlight-yank', { clear = true }),
-  callback = function()
-    vim.highlight.on_yank()
-  end,
-})
-
--- save folds
-vim.cmd [[
-  augroup remember_folds
-      autocmd!
-      autocmd BufWinLeave *.* mkview
-      autocmd BufWinEnter *.* silent! loadview
-    augroup END
-  ]]
 
 local lazypath = vim.fn.stdpath 'data' .. '/lazy/lazy.nvim'
 if not vim.loop.fs_stat(lazypath) then
@@ -200,6 +183,7 @@ require('lazy').setup({
       vim.keymap.set('n', '<leader>sr', builtin.resume, { desc = '[S]earch [R]esume' })
       vim.keymap.set('n', '<leader>s.', builtin.oldfiles, { desc = '[S]earch Recent Files ("." for repeat)' })
       vim.keymap.set('n', '<leader><leader>', builtin.buffers, { desc = '[ ] Find existing buffers' })
+      vim.keymap.set('n', '<leader>sy', builtin.registers, { desc = '[S]earch [Y]ank Registers' })
 
       -- Slightly advanced example of overriding default behavior and theme
       vim.keymap.set('n', '<leader>/', function()
@@ -414,7 +398,22 @@ require('lazy').setup({
         eslint = {},
         prettierd = {},
         volar = {},
-        -- biome = {},
+        biome = {
+          filetypes = {
+            'astro',
+            'css',
+            'graphql',
+            'javascript',
+            'javascriptreact',
+            'json',
+            'jsonc',
+            'svelte',
+            'typescript',
+            'typescript.tsx',
+            'typescriptreact',
+            'vue',
+          },
+        },
 
         -- go
         gopls = {},
@@ -505,23 +504,55 @@ require('lazy').setup({
       --   desc = 'Show Auto Format Status',
       -- },
     },
-    vim.api.nvim_create_user_command('FormatDisable', function(args)
-      if args.bang then
-        -- FormatDisable! will disable formatting just for this buffer
-        vim.b.disable_autoformat = true
-      else
-        vim.g.disable_autoformat = true
+    config = function(_, opts)
+      vim.api.nvim_create_user_command('FormatDisable', function(args)
+        if args.bang then
+          -- FormatDisable! will disable formatting just for this buffer
+          vim.b.disable_autoformat = true
+        else
+          vim.g.disable_autoformat = true
+        end
+      end, {
+        desc = 'Disable autoformat-on-save',
+        bang = true,
+      })
+      vim.api.nvim_create_user_command('FormatEnable', function()
+        vim.b.disable_autoformat = false
+        vim.g.disable_autoformat = false
+      end, { desc = 'Re-enable autoformat-on-save' })
+      local function is_biome_available()
+        local has_biome_config = vim.fn.filereadable(vim.fn.getcwd() .. '/biome.json') == 1
+
+        local has_biome_installed = vim.fn.isdirectory(vim.fn.getcwd() .. '/node_modules/@biomejs') == 1
+          or vim.fn.isdirectory(vim.fn.getcwd() .. '/node_modules/biome') == 1
+
+        return has_biome_config or has_biome_installed
       end
-    end, {
-      desc = 'Disable autoformat-on-save',
-      bang = true,
-    }),
-    vim.api.nvim_create_user_command('FormatEnable', function()
-      vim.b.disable_autoformat = false
-      vim.g.disable_autoformat = false
-    end, {
-      desc = 'Re-enable autoformat-on-save',
-    }),
+
+      local js_ts_filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' }
+      for _, ft in ipairs(js_ts_filetypes) do
+        if opts.formatters_by_ft[ft] then
+          local original_formatters = opts.formatters_by_ft[ft]
+          opts.formatters_by_ft[ft] = function()
+            if is_biome_available() then
+              return original_formatters
+            else
+              return { 'prettierd', stop_after_first = true }
+            end
+          end
+        end
+      end
+
+      if not opts.formatters['biome-check'] then
+        opts.formatters['biome-check'] = {}
+      end
+
+      opts.formatters['biome-check'].condition = function(self, ctx)
+        return is_biome_available()
+      end
+
+      require('conform').setup(opts)
+    end,
     opts = {
       notify_on_error = false,
       format_on_save = function(bufnr)
@@ -547,12 +578,14 @@ require('lazy').setup({
         css = {
           'prettierd',
         },
-        javascript = { 'prettierd', stop_after_first = true },
-        typescript = { 'prettierd', stop_after_first = true },
-        javascriptreact = { 'prettierd', stop_after_first = true },
-        typescriptreact = { 'prettierd', stop_after_first = true },
+        javascript = { 'biome-check', 'prettierd', stop_after_first = true },
+        typescript = { 'biome-check', 'prettierd', stop_after_first = true },
+        javascriptreact = { 'biome-check', 'prettierd', stop_after_first = true },
+        typescriptreact = { 'biome-check', 'prettierd', stop_after_first = true },
         vue = { 'prettierd', stop_after_first = true },
         astro = { 'prettierd', stop_after_first = true },
+        sql = { 'sqlfmt' },
+        http = { 'kulala' },
         -- css = { 'prettierd', 'prettier', stop_after_first = true },
         -- javascriptreact = function()
         --   return use_prettierd() and { 'prettierd', 'prettier' } or { 'prettier' }
@@ -587,10 +620,30 @@ require('lazy').setup({
           },
           stdin = true,
         },
+        ['biome-check'] = {
+          command = 'biome',
+          -- args = { 'check', '--write', '--organize-imports-enabled=false', '--stdin-file-path', '$FILENAME' },
+          args = { 'check', '--write', '--stdin-file-path', '$FILENAME' },
+        },
+        -- biome = {
+        --   command = {
+        --     'biome',
+        --   },
+        --   args = { 'check', '--write', '$FILENAME' }, --  ← this was the magic that fixed organizing imports
+        --   stdin = false,
+        -- },
         prettierd = {
           env = {
             PRETTIERD_DEFAULT_CONFIG = vim.fn.expand '~/.config/nvim/.prettierrc.json',
           },
+        },
+        kulala = {
+          command = 'kulala-fmt',
+          args = {
+            'format',
+            '$FILENAME',
+          },
+          stdin = false,
         },
       },
     },
@@ -630,6 +683,7 @@ require('lazy').setup({
       luasnip.filetype_extend('javascript', { 'javascriptreact' })
 
       vim.filetype.add { extension = { ejs = 'ejs' } }
+
       luasnip.filetype_set('ejs', { 'html', 'javascript', 'ejs' })
 
       local function copilot_chat_active()
@@ -697,6 +751,25 @@ require('lazy').setup({
       require('mini.ai').setup { n_lines = 500 }
       require('mini.surround').setup()
       require('mini.bufremove').setup()
+      require('mini.move').setup {
+        mappings = {
+          -- Move visual selection in Visual mode. Defaults are Alt (Meta) + hjkl.
+          left = '',
+          right = '',
+          down = 'J',
+          up = 'K',
+
+          -- Move current line in Normal mode
+          -- line_left = '<M-h>',
+          -- line_right = '<M-l>',
+          -- line_down = '<M-j>',
+          -- line_up = '<M-k>',
+          line_left = '',
+          line_right = '',
+          line_down = '',
+          line_up = '',
+        },
+      }
 
       local statusline = require 'mini.statusline'
       statusline.setup { use_icons = vim.g.have_nerd_font }
@@ -762,6 +835,11 @@ require('lazy').setup({
           ['.env.*'] = 'bash',
         },
       }
+      vim.filetype.add {
+        extension = {
+          ['http'] = 'http',
+        },
+      }
 
       -- There are additional nvim-treesitter modules that you can use to interact
       -- with nvim-treesitter. You should go explore a few and see what interests you:
@@ -778,7 +856,7 @@ require('lazy').setup({
   -- require 'kickstart.plugins.indent_line',
   -- require 'kickstart.plugins.lint',
   require 'kickstart.plugins.autopairs',
-  require 'kickstart.plugins.neo-tree',
+  -- require 'kickstart.plugins.neo-tree',
   require 'kickstart.plugins.gitsigns', -- adds gitsigns recommend keymaps
 
   -- NOTE: The import below can automatically add your own plugins, configuration, etc from `lua/custom/plugins/*.lua`
