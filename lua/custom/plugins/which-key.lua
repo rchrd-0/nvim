@@ -13,6 +13,7 @@ return { -- Useful plugin to show you pending keybinds.
       { '<leader>w', group = '[W]orkspace' },
       { '<leader>t', group = '[T]oggle' },
       { '<leader>b', group = '[B]uffer' },
+      { '<leader>R', group = '[R]equests' },
       { '<leader>h', group = 'Git [H]unk', mode = { 'n', 'v' } },
       { '<C-W>H', desc = 'Move window left' },
       { '<C-W>J', desc = 'Move window down' },

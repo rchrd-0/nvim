@@ -3,9 +3,12 @@
 --
 -- See the kickstart.nvim README for more information
 return {
-  { 'JoosepAlviste/nvim-ts-context-commentstring', opts = {
-    enable_autocmd = false,
-  } },
+  {
+    'JoosepAlviste/nvim-ts-context-commentstring',
+    opts = {
+      enable_autocmd = false,
+    },
+  },
   {
     'christoomey/vim-tmux-navigator',
     init = function()
@@ -30,7 +33,6 @@ return {
       'neovim/nvim-lspconfig', -- optional
     },
     build = ':UpdateRemotePlugins',
-    -- opts = {}, -- your configuration
     opts = {
       server = {
         override = false,
@@ -82,43 +84,6 @@ return {
     end,
   },
   {
-    'folke/trouble.nvim',
-    opts = {}, -- for default options, refer to the configuration section for custom setup.
-    cmd = 'Trouble',
-    keys = {
-      {
-        '<leader>xx',
-        '<cmd>Trouble diagnostics toggle<cr>',
-        desc = 'Diagnostics (Trouble)',
-      },
-      {
-        '<leader>xX',
-        '<cmd>Trouble diagnostics toggle filter.buf=0<cr>',
-        desc = 'Buffer Diagnostics (Trouble)',
-      },
-      {
-        '<leader>cs',
-        '<cmd>Trouble symbols toggle focus=false<cr>',
-        desc = 'Symbols (Trouble)',
-      },
-      {
-        '<leader>cl',
-        '<cmd>Trouble lsp toggle focus=false win.position=right<cr>',
-        desc = 'LSP Definitions / references / ... (Trouble)',
-      },
-      {
-        '<leader>xL',
-        '<cmd>Trouble loclist toggle<cr>',
-        desc = 'Location List (Trouble)',
-      },
-      {
-        '<leader>xQ',
-        '<cmd>Trouble qflist toggle<cr>',
-        desc = 'Quickfix List (Trouble)',
-      },
-    },
-  },
-  {
     'rmagatti/auto-session',
     lazy = false,
     dependencies = {
@@ -127,58 +92,45 @@ return {
     keys = {
       -- Will use Telescope if installed or a vim.ui.select picker otherwise
       { '<leader>wr', '<cmd>SessionSearch<CR>', desc = 'Session search' },
+      { '<leader>wR', '<cmd>SessionRestore<CR>', desc = 'Session restore' },
       { '<leader>wv', '<cmd>SessionSave<CR>', desc = 'Save session' },
       { '<leader>wa', '<cmd>SessionToggleAutoSave<CR>', desc = 'Toggle autosave' },
     },
-    config = function()
-      require('auto-session').setup {
-        auto_session_suppress_dirs = { '~/', '~/Projects', '~/Downloads', '/' },
-        bypass_save_filetypes = { '', 'netrw' },
-        session_lens = {
-          -- If load_on_setup is false, make sure you use `:SessionSearch` to open the picker as it will initialize everything first
-          load_on_setup = true,
-          theme_conf = { border = true },
-          previewer = false,
-          mappings = {
-            -- Mode can be a string or a table, e.g. {"i", "n"} for both insert and normal mode
-            delete_session = { 'i', '<C-D>' },
-            alternate_session = { 'i', '<C-A>' },
-          },
+    ---enables autocomplete for opts
+    ---@module "auto-session"
+    ---@type AutoSession.Config
+    opts = {
+      bypass_save_filetypes = { 'oil', 'netrw', '' },
+      show_auto_restore_notif = true,
+      -- ⚠️ This will only work if Telescope.nvim is installed
+      -- The following are already the default values, no need to provide them if these are already the settings you want.
+      session_lens = {
+        -- If load_on_setup is false, make sure you use `:SessionSearch` to open the picker as it will initialize everything first
+        load_on_setup = true,
+        previewer = false,
+        mappings = {
+          -- Mode can be a string or a table, e.g. {"i", "n"} for both insert and normal mode
+          delete_session = { 'i', '<C-D>' },
+          alternate_session = { 'i', '<C-S>' },
+          copy_session = { 'i', '<C-Y>' },
         },
-      }
-    end,
+        -- Can also set some Telescope picker options
+        -- For all options, see: https://github.com/nvim-telescope/telescope.nvim/blob/master/doc/telescope.txt#L112
+        theme_conf = {
+          border = true,
+          -- layout_config = {
+          --   width = 0.8, -- Can set width and height as percent of window
+          --   height = 0.5,
+          -- },
+        },
+      },
+      no_restore_cmds = {
+        function()
+          require 'oil'
+        end,
+      },
+    },
   },
-  {
-    'stevearc/oil.nvim',
-    dependencies = { 'nvim-tree/nvim-web-devicons' }, -- use if prefer nvim-web-devicons
-    config = function()
-      require('oil').setup {
-        default_file_explorer = false,
-        view_options = {
-          show_hidden = true,
-        },
-        keymaps = {
-          ['<C-s>'] = false,
-          ['<C-h>'] = false,
-          ['<C-t>'] = false,
-          ['<C-l>'] = false,
-          -- ['<BS>'] = { 'actions.parent', desc = 'Open parent directory' },
-          ['<C-o>v'] = { 'actions.select', opts = { vertical = true }, desc = 'Open the entry in a vertical split' },
-          ['<C-o>s'] = { 'actions.select', opts = { horizontal = true }, desc = 'Open the entry in a horizontal split' },
-          ['<C-o>r'] = { 'actions.refresh', desc = '[R]efresh' },
-          -- ['q'] = { 'actions.close' },
-        },
-        float = {
-          win_options = {
-            winblend = 0,
-          },
-        },
-      }
-      vim.keymap.set('n', '<leader>\\', require('oil').open, { desc = 'Open parent directory in Oil' })
-      vim.keymap.set('n', '\\', require('oil').toggle_float, { desc = 'Toggle Oil float' })
-    end,
-  },
-  -- lazy.nvim
   {
     'folke/noice.nvim',
     event = 'VeryLazy',
@@ -278,35 +230,28 @@ return {
     },
   },
   {
-    'toppair/peek.nvim',
-    event = { 'VeryLazy' },
-    build = 'deno task --quiet build:fast',
-    config = function()
-      require('peek').setup()
-      vim.api.nvim_create_user_command('PeekOpen', require('peek').open, {})
-      vim.api.nvim_create_user_command('PeekClose', require('peek').close, {})
-    end,
-  },
-  {
     'mistweaverco/kulala.nvim',
-    keys = { '<leader>Rs', '<leader>Ra', '<leader>Ro' },
+    keys = {
+      { '<leader>Rs', desc = '[S]end request' },
+      { '<leader>Ra', desc = 'Send [a]ll requests' },
+      { '<leader>Ro', desc = '[O]pen scratchpad' },
+    },
     ft = { 'http', 'rest' },
     opts = {
       -- your configuration comes here
       global_keymaps = true,
     },
   },
-  -- {
-  --   'folke/flash.nvim',
-  --   event = 'VeryLazy',
-  --   opts = {},
-  --   -- stylua: ignore
-  --   keys = {
-  --     { "s", mode = { "n", "x", "o" }, function() require("flash").jump() end, desc = "Flash" },
-  --     { "S", mode = { "n", "x", "o" }, function() require("flash").treesitter() end, desc = "Flash Treesitter" },
-  --     { "r", mode = "o", function() require("flash").remote() end, desc = "Remote Flash" },
-  --     { "R", mode = { "o", "x" }, function() require("flash").treesitter_search() end, desc = "Treesitter Search" },
-  --     { "<M-e>", mode = { "c" }, function() require("flash").toggle() end, desc = "Toggle Flash Search" },
-  --   },
-  -- },
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    -- optional = true,
+    opts = {
+      file_types = { 'markdown', 'copilot-chat', 'codecompanion' },
+    },
+    ft = { 'markdown', 'copilot-chat', 'codecompanion' },
+  },
+  {
+    'sindrets/diffview.nvim',
+    opts = {},
+  },
 }

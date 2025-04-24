@@ -10,6 +10,7 @@ return {
     lazy = false,
     opts = {
       style = 'night',
+      transparent = true,
       dim_inactive = true,
       on_highlights = function(hl, colors)
         -- local util = require 'tokyonight.util'
@@ -23,10 +24,10 @@ return {
         }
       end,
     },
-    init = function()
-      vim.cmd.colorscheme 'tokyonight'
-      vim.cmd.hi 'Comment gui=none'
-    end,
+    -- init = function()
+    --   vim.cmd.colorscheme 'tokyonight'
+    --   vim.cmd.hi 'Comment gui=none'
+    -- end,
   },
   {
     'rebelot/kanagawa.nvim',
@@ -90,6 +91,62 @@ return {
     },
     -- init = function()
     --   vim.cmd.colorscheme 'catppuccin'
+    --   vim.cmd.hi 'Comment gui=none'
+    -- end,
+  },
+  {
+    'AlexvZyl/nordic.nvim',
+    lazy = false,
+    priority = 1000,
+    opts = {
+      dim_inactive_windows = true,
+      styles = {
+        italic = false,
+      },
+    },
+    -- init = function()
+    --     --   vim.cmd.colorscheme 'nordic'
+    --         --   vim.cmd.hi 'Comment gui=none'
+    --             -- end,
+  },
+  {
+    'EdenEast/nightfox.nvim',
+    lazy = false,
+    priority = 1000,
+    opts = {
+      options = {
+        transparent = false,
+        dim_inactive = true,
+        -- styles = {
+        --   comments = 'italic',
+        -- },
+      },
+      specs = {
+        all = {
+          -- sel0 = 'sel1',
+          -- sel1 = 'sel0',
+        },
+        --   nightfox = {
+        --     sel0 = '#3e5273',
+        --   },
+        --   duskfox = {
+        --     sel0 = '#574d80', -- Custom selection color for duskfox
+        --   },
+        --   terafox = {
+        --     sel0 = '#345353', -- Custom selection color for terafox
+        --   },
+        --   carbonfox = {
+        --     sel0 = '#3a3a3a', -- Custom selection color for carbonfox
+        --   },
+      },
+    },
+    -- groups = {
+    --   all = {
+    --     Visual = { bg = '#4e5a75' },
+    --   },
+    -- },
+    -- init = function()
+    --   vim.cmd.colorscheme 'nightfox'
     --   vim.cmd.hi 'Comment gui=none'
     -- end,
   },

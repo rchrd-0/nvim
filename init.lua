@@ -43,6 +43,10 @@ vim.opt.autoread = true
 vim.opt.wildmode = 'longest:full,full'
 vim.opt.sessionoptions = { 'buffers', 'curdir', 'tabpages', 'winsize', 'help', 'globals', 'skiprtp', 'folds' }
 
+vim.cmd.hi 'Comment gui=none'
+vim.keymap.set('n', 'gT', '<Nop>', { noremap = true })
+vim.keymap.set('n', 'gt', '<Nop>', { noremap = true })
+
 require('custom.commands').setup()
 
 local keymaps = require 'custom.keymaps'
@@ -258,6 +262,7 @@ require('lazy').setup({
           --  Useful when you're not sure what type a variable is and you want to see
           --  the definition of its *type*, not where it was *defined*.
           map('<leader>D', require('telescope.builtin').lsp_type_definitions, 'Type [D]efinition')
+          map('gt', require('telescope.builtin').lsp_type_definitions, '[G]oto [T]ype definition')
 
           -- Fuzzy find all the symbols in your current document.
           --  Symbols are things like variables, functions, types, etc.
@@ -392,6 +397,7 @@ require('lazy').setup({
           settings = {
             tailwindCSS = {
               classAttributes = { 'class', 'className', 'class:list', 'classList', 'ngClass', '.*ClassName' },
+              classFunctions = { 'cn', 'clsx', 'cva' },
             },
           },
         },
@@ -575,9 +581,7 @@ require('lazy').setup({
         html = {
           'prettierd',
         },
-        css = {
-          'prettierd',
-        },
+        css = { 'biome-check', 'prettierd', stop_after_first = true },
         javascript = { 'biome-check', 'prettierd', stop_after_first = true },
         typescript = { 'biome-check', 'prettierd', stop_after_first = true },
         javascriptreact = { 'biome-check', 'prettierd', stop_after_first = true },
@@ -743,7 +747,18 @@ require('lazy').setup({
   },
 
   -- Highlight todo, notes, etc in comments
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = true } },
+  {
+    'folke/todo-comments.nvim',
+    event = 'VimEnter',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    opts = {
+      signs = true,
+      keywords = {
+        dev = { icon = ' ', color = 'hint', alt = { 'INFO' } },
+        DEV = { icon = ' ', color = 'hint', alt = { 'INFO' } },
+      },
+    },
+  },
 
   { -- Collection of various small independent plugins/modules
     'echasnovski/mini.nvim',
@@ -888,5 +903,8 @@ require('lazy').setup({
     },
   },
 })
+
+vim.cmd.colorscheme 'carbonfox'
+
 -- The line beneath this is called `modeline`. See `:help modeline`
 -- vim: ts=2 sts=2 sw=2 et
