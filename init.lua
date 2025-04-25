@@ -40,6 +40,8 @@ vim.opt.smartindent = true
 vim.opt.autoindent = true
 vim.opt.autoread = true
 
+vim.diagnostic.config { virtual_text = true }
+
 vim.opt.wildmode = 'longest:full,full'
 vim.opt.sessionoptions = { 'buffers', 'curdir', 'tabpages', 'winsize', 'help', 'globals', 'skiprtp', 'folds' }
 

@@ -254,4 +254,20 @@ return {
     'sindrets/diffview.nvim',
     opts = {},
   },
+  {
+    'ibhagwan/fzf-lua',
+    dependencies = { 'nvim-tree/nvim-web-devicons' },
+    opts = function()
+      local actions = require('fzf-lua').actions
+
+      return {
+        actions = {
+          files = {
+            [1] = true,
+            ['enter'] = actions.file_edit,
+          },
+        },
+      }
+    end,
+  },
 }

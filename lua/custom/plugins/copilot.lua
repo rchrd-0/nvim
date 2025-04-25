@@ -243,6 +243,18 @@ return {
       strategies = {
         chat = {
           adapter = 'openrouter',
+          slash_commands = {
+            ['buffer'] = {
+              opts = {
+                provider = 'fzf_lua',
+              },
+            },
+            ['file'] = {
+              opts = {
+                provider = 'fzf_lua',
+              },
+            },
+          },
         },
         inline = {
           adapter = 'openrouter',
