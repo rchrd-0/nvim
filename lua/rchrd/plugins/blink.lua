@@ -20,11 +20,19 @@ return {
         -- `friendly-snippets` contains a variety of premade snippets.
         --    See the README about individual language/framework/plugin snippets:
         --    https://github.com/rafamadriz/friendly-snippets
+        {
+          'rafamadriz/friendly-snippets',
+          config = function()
+            require('luasnip.loaders.from_vscode').lazy_load()
+          end,
+        },
+        {
+          'saghen/blink.compat',
+          optional = true, -- make optional so it's only enabled if any extras need it
+          opts = {},
+        },
         -- {
-        --   'rafamadriz/friendly-snippets',
-        --   config = function()
-        --     require('luasnip.loaders.from_vscode').lazy_load()
-        --   end,
+        --   'giuxtaposition/blink-cmp-copilot',
         -- },
       },
       opts = {},
@@ -78,6 +86,12 @@ return {
       default = { 'lsp', 'path', 'snippets', 'lazydev' },
       providers = {
         lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
+        --   copilot = {
+        --     name = 'copilot',
+        --     module = 'blink-cmp-copilot',
+        --     score_offset = 100,
+        --     async = true,
+        --   },
       },
     },
 
