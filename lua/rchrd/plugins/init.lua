@@ -14,4 +14,22 @@ return {
     vim.keymap.set('n', '<M-l>', ':TmuxNavigateRight<CR>', { noremap = true, silent = true }),
     vim.keymap.set('n', '<M-\\>', ':TmuxNavigatePrevious<CR>', { noremap = true, silent = true }),
   },
+  {
+    'smjonas/inc-rename.nvim',
+    opts = {
+      keys = {
+        vim.keymap.set('n', '<leader>rn', function()
+          return ':IncRename ' .. vim.fn.expand '<cword>'
+        end, { expr = true }),
+      },
+    },
+  },
+  {
+    'MeanderingProgrammer/render-markdown.nvim',
+    -- optional = true,
+    opts = {
+      file_types = { 'markdown', 'copilot-chat', 'codecompanion' },
+    },
+    ft = { 'markdown', 'copilot-chat', 'codecompanion' },
+  },
 }
