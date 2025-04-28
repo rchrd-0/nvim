@@ -2,7 +2,8 @@ return { -- Useful plugin to show you pending keybinds.
   'folke/which-key.nvim',
   event = 'VimEnter', -- Sets the loading event to 'VimEnter'
   opts = {
-    delay = 0,
+    preset = 'helix',
+    delay = 100,
     icons = {
       mappings = vim.g.have_nerd_font,
       keys = vim.g.have_nerd_font and {} or {
@@ -45,8 +46,16 @@ return { -- Useful plugin to show you pending keybinds.
       { '<leader>x', group = 'diagnostics/quickfix', icon = { icon = '󱖫 ', color = 'green' } },
       { 'z', group = 'fold' },
       {
-        'ys',
+        'gs',
         group = '[S]urround',
+      },
+      {
+        'grn',
+        desc = 'LSP: [R]e[n]ame',
+      },
+      {
+        'gra',
+        desc = 'LSP: Code [A]ction',
       },
     },
   },

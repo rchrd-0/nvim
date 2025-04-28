@@ -1,36 +1,61 @@
 local M = {}
 
 function M.get_servers(mason_registry)
-  local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path()
-    .. '/node_modules/@vue/language-server'
+  -- local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
 
   return {
-    ts_ls = {
-      init_options = {
-        plugins = {
-          {
-            name = '@vue/typescript-plugin',
-            location = vue_language_server_path,
-            languages = { 'vue' },
-          },
-        },
-      },
+    -- ts_ls {
+    --   enabled = false,
+    -- },
+    vtsls = {
+      -- init_options = {
+      --   plugins = {
+      --     {
+      --       name = '@vue/typescript-plugin',
+      --       location = vue_language_server_path,
+      --       languages = { 'vue' },
+      --     },
+      --   },
+      -- },
       filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
       settings = {
+        complete_function_calls = true,
         implicitProjectConfiguration = {
           checkJs = false,
         },
-        typescript = {
-          inlayHints = {
-            includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all'
-            includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-            includeInlayVariableTypeHints = false,
-            includeInlayFunctionParameterTypeHints = false,
-            includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-            includeInlayPropertyDeclarationTypeHints = false,
-            includeInlayFunctionLikeReturnTypeHints = false,
-            includeInlayEnumMemberValueHints = true,
+        vtsls = {
+          enableMoveToFileCodeAction = true,
+          autoUseWorkspaceTsdk = true,
+          experimental = {
+            maxInlayHintLength = 30,
+            completion = {
+              enableServerSideFuzzyMatch = true,
+            },
           },
+        },
+        typescript = {
+          updateImportsOnFileMove = { enabled = 'always' },
+          suggest = {
+            completeFunctionCalls = true,
+          },
+          inlayHints = {
+            enumMemberValues = { enabled = true },
+            functionLikeReturnTypes = { enabled = true },
+            parameterNames = { enabled = 'literals' },
+            parameterTypes = { enabled = true },
+            propertyDeclarationTypes = { enabled = true },
+            variableTypes = { enabled = false },
+          },
+          -- inlayHints = {
+          --   includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all'
+          --   includeInlayParameterNameHintsWhenArgumentMatchesName = true,
+          --   includeInlayVariableTypeHints = false,
+          --   includeInlayFunctionParameterTypeHints = false,
+          --   includeInlayVariableTypeHintsWhenTypeMatchesName = true,
+          --   includeInlayPropertyDeclarationTypeHints = false,
+          --   includeInlayFunctionLikeReturnTypeHints = false,
+          --   includeInlayEnumMemberValueHints = true,
+          -- },
         },
       },
     },
@@ -93,4 +118,4 @@ function M.get_servers(mason_registry)
   }
 end
 
-return M 
+return M

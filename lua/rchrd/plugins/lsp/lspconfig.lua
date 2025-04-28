@@ -1,13 +1,12 @@
 return {
   {
-    -- `lazydev` configures Lua LSP for your Neovim config, runtime and plugins
-    -- used for completion, annotations and signatures of Neovim apis
     'folke/lazydev.nvim',
     ft = 'lua',
     opts = {
       library = {
         -- Load luvit types when the `vim.uv` word is found
         { path = '${3rd}/luv/library', words = { 'vim%.uv' } },
+        { path = 'snacks.nvim', words = { 'Snacks' } },
       },
     },
   },
@@ -87,7 +86,9 @@ return {
       vim.diagnostic.config {
         severity_sort = true,
         float = { border = 'rounded', source = 'if_many' },
-        underline = { severity = vim.diagnostic.severity.ERROR },
+        -- underline = { severity = vim.diagnostic.severity.ERROR },
+        underline = true,
+        update_in_insert = false,
         signs = vim.g.have_nerd_font and {
           text = {
             [vim.diagnostic.severity.ERROR] = '󰅚 ',
@@ -121,6 +122,12 @@ return {
       local webdev = require('rchrd.plugins.lsp.servers.webdev').get_servers(mason_registry)
 
       local servers = {
+        -- tsserver = {
+        --   enabled = false,
+        -- },
+        ts_ls = {
+          enabled = false,
+        },
         -- go
         gopls = {},
 
@@ -143,6 +150,23 @@ return {
               completion = {
                 callSnippet = 'Replace',
               },
+              -- workspace = {
+              --   checkThirdParty = false,
+              -- },
+              -- codeLens = {
+              --   enable = true,
+              -- },
+              -- doc = {
+              --   privateName = { '^_' },
+              -- },
+              -- hint = {
+              --   enable = true,
+              --   setType = false,
+              --   paramType = true,
+              --   paramName = 'Disable',
+              --   semicolon = 'Disable',
+              --   arrayIndex = 'Disable',
+              -- },
             },
           },
         },
@@ -171,5 +195,18 @@ return {
         },
       }
     end,
+  },
+  {
+    'luckasRanarison/tailwind-tools.nvim',
+    dependencies = {
+      'nvim-treesitter/nvim-treesitter',
+      'neovim/nvim-lspconfig',
+    },
+    build = ':UpdateRemotePlugins',
+    opts = {
+      server = {
+        override = false,
+      },
+    },
   },
 }
