@@ -103,9 +103,9 @@ return {
         --   terafox = {
         --     sel0 = '#345353', -- Custom selection color for terafox
         --   },
-        --   carbonfox = {
-        --     sel0 = '#3a3a3a', -- Custom selection color for carbonfox
-        --   },
+        carbonfox = {
+          sel0 = '#3a3a3a', -- Custom selection color for carbonfox
+        },
       },
     },
     -- groups = {
