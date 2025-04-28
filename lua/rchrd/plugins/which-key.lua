@@ -46,10 +46,10 @@ return { -- Useful plugin to show you pending keybinds.
       { '<leader>t', group = '[T]oggle' },
       { '<leader>x', group = 'diagnostics/quickfix', icon = { icon = '󱖫 ', color = 'green' } },
       { 'z', group = 'fold' },
-      {
-        'gs',
-        group = '[S]urround',
-      },
+      -- {
+      --   'gs',
+      --   group = '[S]urround',
+      -- },
       {
         'grn',
         desc = 'LSP: [R]e[n]ame',
