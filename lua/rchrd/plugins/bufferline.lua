@@ -9,15 +9,20 @@ return {
     { '<S-l>', '<cmd>BufferLineCycleNext<cr>', desc = 'Next Buffer' },
     { '[T', '<cmd>BufferLineMovePrev<cr>', desc = 'Move buffer prev' },
     { ']T', '<cmd>BufferLineMoveNext<cr>', desc = 'Move buffer next' },
-    { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle Pin' },
+    { '<leader>bp', '<Cmd>BufferLineTogglePin<CR>', desc = 'Toggle [b]uffer [p]in' },
     { '<leader>bP', '<Cmd>BufferLineGroupClose ungrouped<CR>', desc = 'Delete Non-Pinned Buffers' },
-    -- { '<leader>bo', '<Cmd>BufferLineCloseOthers<CR>', desc = 'Delete Other Buffers' },
-    { '<leader>br', '<Cmd>BufferLineCloseRight<CR>', desc = 'Delete Buffers to the Right' },
-    { '<leader>bl', '<Cmd>BufferLineCloseLeft<CR>', desc = 'Delete Buffers to the Left' },
+    { '<leader>bl', '<Cmd>BufferLineCloseRight<CR>', desc = 'Delete [B]uffers to the Right' },
+    { '<leader>bh', '<Cmd>BufferLineCloseLeft<CR>', desc = 'Delete [B]uffers to the Left' },
   },
   opts = {
     options = {
       always_show_bufferline = true,
+      close_command = function(n)
+        Snacks.bufdelete(n)
+      end,
+      right_mouse_command = function(n)
+        Snacks.bufdelete(n)
+      end,
       show_buffer_close_icons = false,
       diagnostics = 'nvim_lsp',
       diagnostics_indicator = function(count, level, diagnostics_dict, context)

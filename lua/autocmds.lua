@@ -103,3 +103,17 @@ vim.api.nvim_create_autocmd({ 'BufWritePre' }, {
     vim.fn.mkdir(vim.fn.fnamemodify(file, ':p:h'), 'p')
   end,
 })
+
+-- Bd
+vim.api.nvim_create_user_command('Bd', function()
+  require('snacks').bufdelete()
+end, {})
+
+vim.api.nvim_create_user_command('BD', function()
+  require('snacks').bufdelete.all()
+end, {})
+
+-- :Bo
+vim.api.nvim_create_user_command('Bo', function()
+  require('snacks').bufdelete.other()
+end, {})
