@@ -31,9 +31,6 @@ return {
           optional = true, -- make optional so it's only enabled if any extras need it
           opts = {},
         },
-        -- {
-        --   'giuxtaposition/blink-cmp-copilot',
-        -- },
       },
       opts = {},
     },
@@ -86,12 +83,6 @@ return {
       default = { 'lsp', 'path', 'snippets', 'lazydev' },
       providers = {
         lazydev = { module = 'lazydev.integrations.blink', score_offset = 100 },
-        --   copilot = {
-        --     name = 'copilot',
-        --     module = 'blink-cmp-copilot',
-        --     score_offset = 100,
-        --     async = true,
-        --   },
       },
     },
 
