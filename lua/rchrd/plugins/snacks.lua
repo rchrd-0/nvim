@@ -45,9 +45,10 @@ return {
               icon = ' ',
               key = 'c',
               desc = 'Config',
-              action = function()
-                require('mini.pick').builtin.files { cwd = vim.fn.stdpath 'config' }
-              end,
+              action = ":Pick files cwd=vim.fn.stdpath('config')",
+              -- action = function()
+              --   require('mini.pick').builtin.files { cwd = vim.fn.stdpath 'config' }
+              -- end,
             },
             { icon = ' ', key = 's', desc = 'Restore Session', section = 'session' },
             { icon = '󰒲 ', key = 'L', desc = 'Lazy', action = ':Lazy', enabled = package.loaded.lazy ~= nil },

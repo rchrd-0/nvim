@@ -28,6 +28,9 @@ return {
     dependencies = {
       'nvim-treesitter/nvim-treesitter',
     },
+    init = function()
+      vim.keymap.set({ 'n', 'v' }, '<Leader>av', ':CodeCompanionChat Toggle<CR>', { noremap = true, silent = true })
+    end,
     opts = {
       strategies = {
         chat = {
@@ -56,6 +59,11 @@ return {
                 provider = 'mini_pick',
                 contains_code = true,
               },
+            },
+          },
+          keymaps = {
+            send = {
+              modes = { i = '<C-CR>' },
             },
           },
         },

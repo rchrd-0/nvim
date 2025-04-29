@@ -21,6 +21,11 @@ return {
       },
     }
 
+    MiniPick.registry.files = function(local_opts)
+      local opts = { source = { cwd = local_opts.cwd } }
+      local_opts.cwd = nil
+      return MiniPick.builtin.files(local_opts, opts)
+    end
     vim.ui.select = MiniPick.ui_select
 
     vim.keymap.set('n', '<leader>sf', ':Pick files<CR>', { desc = '[S]earch [F]iles', silent = true })
@@ -32,7 +37,7 @@ return {
 
     vim.keymap.set('n', '<leader>sh', ':Pick help<CR>', { desc = '[S]earch [H]elp (mini.pick)', silent = true })
     vim.keymap.set('n', '<leader>sk', ':Pick keymaps<CR>', { desc = '[S]earch [K]eymaps (mini.extra)', silent = true })
-    vim.keymap.set('n', '<leader>sD', ':Pick commands<CR>', { desc = '[S]earch [D]iagnostics Workspace' })
+    vim.keymap.set('n', '<leader>sC', ':Pick commands<CR>', { desc = '[S]earch [C]ommands' })
     vim.keymap.set('n', '<leader>sd', ":Pick diagnostic scope='current'<CR>", { desc = '[S]earch [D]iagnostics Document' })
     vim.keymap.set('n', '<leader>sD', ":Pick diagnostic scope='all'<CR>", { desc = '[S]earch [D]iagnostics Workspace' })
     vim.keymap.set('n', '<leader>sy', ':Pick registers<CR>', { desc = '[S]earch [Y]ank Registers' })
@@ -50,7 +55,7 @@ return {
 
     -- vim.keymap.set('n', '<leader>ss', ':Pick builtins<CR>', { desc = '[S]earch [S]elect mini.pick action', silent = true })
     -- vim.keymap.set('n', '<leader>sw', ':Pick grep_live<CR>', { desc = '[S]earch current [W]ord (mini.pick - use visual select)', silent = true }) -- May need visual selection
-    -- vim.keymap.set('n', '<leader>sn', ":Pick files { cwd = vim.fn.stdpath 'config' , silent = true}<CR>", { desc = '[S]earch [N]eovim files (mini.pick)' })
+    vim.keymap.set('n', '<leader>sn', ":Pick files cwd=vim.fn.stdpath('config')<CR>", { desc = '[S]earch [N]eovim files (mini.pick)' })
 
     local ai = require 'mini.ai'
     ai.setup {
