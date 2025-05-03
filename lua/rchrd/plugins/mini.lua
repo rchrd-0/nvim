@@ -26,7 +26,6 @@ return {
       local_opts.cwd = nil
       return MiniPick.builtin.files(local_opts, opts)
     end
-    vim.ui.select = MiniPick.ui_select
 
     vim.keymap.set('n', '<leader>sf', ':Pick files<CR>', { desc = '[S]earch [F]iles', silent = true })
     vim.keymap.set('n', '<leader><leader>', ':Pick buffers<CR>', { desc = '[ ] Find existing buffers', silent = true })
@@ -55,7 +54,9 @@ return {
 
     -- vim.keymap.set('n', '<leader>ss', ':Pick builtins<CR>', { desc = '[S]earch [S]elect mini.pick action', silent = true })
     -- vim.keymap.set('n', '<leader>sw', ':Pick grep_live<CR>', { desc = '[S]earch current [W]ord (mini.pick - use visual select)', silent = true }) -- May need visual selection
-    vim.keymap.set('n', '<leader>sn', ":Pick files cwd=vim.fn.stdpath('config')<CR>", { desc = '[S]earch [N]eovim files (mini.pick)' })
+    vim.keymap.set('n', '<leader>sn', ":Pick files cwd=vim.fn.stdpath('config')<CR>", { desc = '[S]earch [N]eovim files' })
+
+    vim.ui.select = MiniPick.ui_select
 
     local ai = require 'mini.ai'
     ai.setup {

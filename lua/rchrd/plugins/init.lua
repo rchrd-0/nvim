@@ -47,4 +47,8 @@ return {
       'JoosepAlviste/nvim-ts-context-commentstring',
     },
   },
+  {
+    'windwp/nvim-ts-autotag',
+    opts = {},
+  },
 }

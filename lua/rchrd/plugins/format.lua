@@ -8,8 +8,26 @@ return {
       function()
         require('conform').format { async = true, lsp_format = 'fallback' }
       end,
-    mode = '',
+      mode = '',
       desc = '[F]ormat buffer',
+    },
+    {
+      '<leader>uf',
+      function()
+        vim.g.disable_autoformat = not vim.g.disable_autoformat
+        print('Global autoformatting ' .. (vim.g.disable_autoformat and 'disabled' or 'enabled'))
+      end,
+      mode = 'n',
+      desc = 'Toggle Auto Format (Global)',
+    },
+    {
+      '<leader>uF',
+      function()
+        vim.b.disable_autoformat = not vim.b.disable_autoformat
+        print('Buffer autoformatting ' .. (vim.b.disable_autoformat and 'disabled' or 'enabled'))
+      end,
+      mode = 'n',
+      desc = 'Toggle Auto Format (Buffer)',
     },
   },
   config = function(_, opts)
@@ -19,6 +37,19 @@ return {
       local has_biome_installed = vim.fn.isdirectory(vim.fn.getcwd() .. '/node_modules/@biomejs') == 1
 
       return has_biome_config or has_biome_installed
+    end
+
+    local biome_prettierd = { 'biome-check', 'prettierd', stop_after_first = true }
+    local biome_filetypes = {
+      'css',
+      'javascript',
+      'typescript',
+      'javascriptreact',
+      'typescriptreact',
+    }
+
+    for _, ft in ipairs(biome_filetypes) do
+      opts.formatters_by_ft[ft] = biome_prettierd
     end
 
     local js_ts_filetypes = { 'javascript', 'typescript', 'javascriptreact', 'typescriptreact' }
@@ -41,14 +72,13 @@ return {
     notify_on_error = false,
     format_on_save = function(bufnr)
       local disable_filetypes = { c = true, cpp = true }
-      if disable_filetypes[vim.bo[bufnr].filetype] then
-        return nil
-      else
-        return {
-          timeout_ms = 500,
-          lsp_format = 'fallback',
-        }
+      if vim.g.disable_autoformat or vim.b[bufnr].disable_autoformat then
+        return
       end
+      return {
+        timeout_ms = 500,
+        lsp_fallback = not disable_filetypes[vim.bo[bufnr].filetype],
+      }
     end,
     formatters_by_ft = {
       lua = { 'stylua' },
@@ -56,11 +86,12 @@ return {
       html = {
         'prettierd',
       },
-      css = { 'biome-check', 'prettierd', stop_after_first = true },
-      javascript = { 'biome-check', 'prettierd', stop_after_first = true },
-      typescript = { 'biome-check', 'prettierd', stop_after_first = true },
-      javascriptreact = { 'biome-check', 'prettierd', stop_after_first = true },
-      typescriptreact = { 'biome-check', 'prettierd', stop_after_first = true },
+      -- css = { 'biome-check', 'prettierd', stop_after_first = true },
+      -- javascript = { 'biome-check', 'prettierd', stop_after_first = true },
+      -- typescript = { 'biome-check', 'prettierd', stop_after_first = true },
+      -- javascriptreact = { 'biome-check', 'prettierd', stop_after_first = true },
+      -- typescriptreact = { 'biome-check', 'prettierd', stop_after_first = true },
+      json = { 'biome-check', 'jsonls', stop_after_first = true },
       vue = { 'prettierd', stop_after_first = true },
       astro = { 'prettierd', stop_after_first = true },
       sql = { 'sqlfmt' },

@@ -110,7 +110,6 @@ function M.get_servers(mason_registry)
         'jsonc',
         'svelte',
         'typescript',
-        'typescript.tsx',
         'typescriptreact',
         'vue',
       },

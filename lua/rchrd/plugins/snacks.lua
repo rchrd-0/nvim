@@ -15,6 +15,7 @@ return {
         col = nil, -- dashboard position. nil for center
         pane_gap = 4,
         preset = {
+          -- pick = 'mini.pick',
           keys = {
             {
               icon = ' ',
@@ -57,6 +58,7 @@ return {
         },
         sections = {
           { section = 'keys', gap = 0, padding = 1 },
+          -- { section = 'startup' },
         },
       },
       picker = { enabled = true },
