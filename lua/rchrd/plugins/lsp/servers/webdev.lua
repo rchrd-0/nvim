@@ -1,23 +1,28 @@
 local M = {}
 
 function M.get_servers(mason_registry)
-  -- local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
+  local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
+  local svelte_language_server_path = mason_registry.get_package('svelte-language-server'):get_install_path() .. '/node_modules/typescript-svelte-plugin'
 
   return {
-    -- ts_ls {
-    --   enabled = false,
-    -- },
     vtsls = {
-      -- init_options = {
-      --   plugins = {
+      -- tsserver = {
+      --   globalPlugins = {
       --     {
       --       name = '@vue/typescript-plugin',
       --       location = vue_language_server_path,
       --       languages = { 'vue' },
+      --       configNamespace = 'typescript',
+      --       enableForWorkspaceTypeScriptVersions = true,
+      --     },
+      --     {
+      --       name = 'typescript-svelte-plugin',
+      --       location = svelte_language_server_path,
+      --       enableForWorkspaceTypeScriptVersions = true,
       --     },
       --   },
       -- },
-      filetypes = { 'typescript', 'javascript', 'javascriptreact', 'typescriptreact', 'vue' },
+      filetypes = { 'typescript', 'javascript', 'javascript.jsx', 'javascriptreact', 'typescriptreact', 'javascript.jsx', 'typescript.tsx', 'vue' },
       settings = {
         complete_function_calls = true,
         implicitProjectConfiguration = {
@@ -32,19 +37,41 @@ function M.get_servers(mason_registry)
               enableServerSideFuzzyMatch = true,
             },
           },
+          tsserver = {
+            globalPlugins = {
+              {
+                name = '@vue/typescript-plugin',
+                location = vue_language_server_path,
+                languages = { 'vue' },
+                configNamespace = 'typescript',
+                enableForWorkspaceTypeScriptVersions = true,
+              },
+              {
+                name = 'typescript-svelte-plugin',
+                location = svelte_language_server_path,
+                enableForWorkspaceTypeScriptVersions = true,
+              },
+            },
+          },
         },
         typescript = {
           updateImportsOnFileMove = { enabled = 'always' },
           suggest = {
             completeFunctionCalls = true,
           },
+          -- referencesCodeLens = { enabled = true, showOnAllFunctions = true },
+          -- implementationsCodeLens = { enabled = true, showOnInterfaceMethods = true },
           inlayHints = {
             enumMemberValues = { enabled = true },
             functionLikeReturnTypes = { enabled = true },
-            parameterNames = { enabled = 'literals' },
+            parameterNames = { enabled = 'all', suppressWhenArgumentMatchesName = true },
             parameterTypes = { enabled = true },
             propertyDeclarationTypes = { enabled = true },
             variableTypes = { enabled = false },
+          },
+          preferences = {
+            useAliasesForRenames = false,
+            importModuleSpecifier = 'non-relative',
           },
           -- inlayHints = {
           --   includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all'
@@ -98,7 +125,13 @@ function M.get_servers(mason_registry)
     },
     eslint = {},
     prettierd = {},
-    volar = {},
+    volar = {
+      -- init_options = {
+      --   vue = {
+      --     hybridMode = true,
+      --   },
+      -- },
+    },
     biome = {
       filetypes = {
         'astro',
@@ -110,6 +143,7 @@ function M.get_servers(mason_registry)
         'jsonc',
         'svelte',
         'typescript',
+        'typescript.tsx',
         'typescriptreact',
         'vue',
       },

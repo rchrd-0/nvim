@@ -117,3 +117,13 @@ end, {})
 vim.api.nvim_create_user_command('Bo', function()
   require('snacks').bufdelete.other()
 end, {})
+
+local env_filetype_group = vim.api.nvim_create_augroup('EnvFiletype', { clear = true })
+
+vim.api.nvim_create_autocmd({ 'BufRead', 'BufNewFile' }, {
+  pattern = '*/.env*',
+  group = env_filetype_group,
+  callback = function()
+    vim.opt.filetype = 'sh'
+  end,
+})

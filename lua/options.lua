@@ -36,7 +36,7 @@ vim.opt.colorcolumn = '80,100'
 vim.opt.scrolloff = 10
 -- vim.opt.confirm = true
 
--- vim.opt.tabstop = 2
+vim.opt.tabstop = 2
 -- vim.opt.shiftwidth = 2
 -- vim.opt.softtabstop = 2
 vim.opt.expandtab = true

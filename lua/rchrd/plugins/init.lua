@@ -1,7 +1,18 @@
 return {
   require 'rchrd.plugins.lsp.lspconfig',
 
-  { 'folke/todo-comments.nvim', event = 'VimEnter', dependencies = { 'nvim-lua/plenary.nvim' }, opts = { signs = false } },
+  {
+    'folke/todo-comments.nvim',
+    event = 'VimEnter',
+    dependencies = { 'nvim-lua/plenary.nvim' },
+    opts = {
+      signs = true,
+      keywords = {
+        dev = { icon = ' ', color = 'hint', alt = { 'INFO' } },
+        DEV = { icon = ' ', color = 'hint', alt = { 'INFO' } },
+      },
+    },
+  },
   {
     'christoomey/vim-tmux-navigator',
     init = function()
@@ -51,4 +62,14 @@ return {
     'windwp/nvim-ts-autotag',
     opts = {},
   },
+  {
+    'sindrets/diffview.nvim',
+    opts = {},
+  },
+  -- {
+  --   'm4xshen/hardtime.nvim',
+  --   lazy = false,
+  --   dependencies = { 'MunifTanjim/nui.nvim' },
+  --   opts = {},
+  -- },
 }

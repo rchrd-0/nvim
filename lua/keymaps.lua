@@ -7,8 +7,12 @@ return {
   { 'n', '<M-j>', ':wincmd j<CR>', { desc = 'Move focus to the lower window' } },
   { 'n', '<M-k>', ':wincmd k<CR>', { desc = 'Move focus to the upper window' } },
   { 'n', '<M-w>', '<C-w>w', { desc = 'Move focus to the next window' } },
+  { 'n', '<C-w>"', '<C-w>s', { desc = 'Split window' } },
+  { 'n', '<C-w>%', '<C-w>v', { desc = 'Split window vertically' } },
 
   { { 'n', 'v' }, '<leader>y', '"+y', { noremap = true, desc = '[Y]ank to system clipboard' } },
+  { { 'n', 'v' }, '<leader>Y', '"+Y', { noremap = true, desc = '[Y]ank line to system clipboard' } },
+  { { 'n', 'v' }, '<leader>d', '"_d', { noremap = true, desc = '[D]elete to black hole register' } },
 
   { 'n', '<C-d>', '<C-d>zz' },
   { 'n', '<C-u>', '<C-u>zz' },
@@ -28,6 +32,7 @@ return {
 
   { 'n', 'ZA', ':qa<CR>', { silent = true, noremap = true } },
 
-  -- { 'n', '<leader>q', vim.diagnostic.setloclist, { desc = 'Open diagnostic [Q]uickfix list' } },
   { 'n', '<leader>e', vim.diagnostic.open_float, { desc = 'Show diagnostic [E]rror messages' } },
+
+  { 'n', 's', '<Nop>', { noremap = true } },
 }

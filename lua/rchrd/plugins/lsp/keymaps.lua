@@ -12,6 +12,7 @@ function M.setup_lsp_keymaps(bufnr)
   map('<leader>ca', vim.lsp.buf.code_action, 'Code [A]ction', { 'n', 'x' })
   map('grD', vim.lsp.buf.declaration, '[G]oto [D]eclaration')
   map('gd', vim.lsp.buf.definition, 'LSP: [G]oto [D]efinition')
+  map('<C-w>gd', ':vsplit | lua vim.lsp.buf.definition()<CR>', 'LSP: [G]oto [D]efinition in split')
 
   -- map('grr', fzf.lsp_references, '[G]oto [R]eferences')
   -- map('gri', fzf.lsp_implementations, '[G]oto [I]mplementation')

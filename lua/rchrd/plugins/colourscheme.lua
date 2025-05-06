@@ -114,4 +114,13 @@ return {
     --   },
     -- },
   },
+  {
+    'jwbaldwin/oscura.nvim',
+    lazy = false,
+    priority = 1000,
+    opts = {
+      -- transparent_background = true, -- Set to true for transparent background
+      custom_dark_background = '#131419', -- Set a custom background color
+    },
+  },
 }

@@ -22,6 +22,8 @@ return {
       'saghen/blink.cmp',
     },
     config = function()
+      local util = require 'lspconfig.util'
+
       vim.api.nvim_create_autocmd('LspAttach', {
         group = vim.api.nvim_create_augroup('kickstart-lsp-attach', { clear = true }),
         callback = function(event)
@@ -50,6 +52,11 @@ return {
           end
 
           local client = vim.lsp.get_client_by_id(event.data.client_id)
+
+          if client and client.name == 'ruff' then
+            -- Disable hover in favor of Pyright
+            client.server_capabilities.hoverProvider = false
+          end
 
           if client and client_supports_method(client, vim.lsp.protocol.Methods.textDocument_documentHighlight, event.buf) then
             local highlight_augroup = vim.api.nvim_create_augroup('kickstart-lsp-highlight', { clear = false })
@@ -122,12 +129,17 @@ return {
       local webdev = require('rchrd.plugins.lsp.servers.webdev').get_servers(mason_registry)
 
       local servers = {
+        jsonls = {
+          init_options = {
+            provideFormatter = false,
+          },
+        },
         -- tsserver = {
         --   enabled = false,
         -- },
-        ts_ls = {
-          enabled = false,
-        },
+        -- ts_ls = {
+        --   enabled = false,
+        -- },
         -- go
         gopls = {},
 
@@ -137,12 +149,22 @@ return {
 
         -- python
         pyright = {},
-        ruff = {},
+        ruff = {
+          cmd_env = {
+            RUFF_TRACE = 'messages',
+          },
+          init_options = {
+            settings = {
+              logLevel = 'error',
+            },
+          },
+        },
 
         -- crypto
-        solidity_ls_nomicfoundation = {},
+        -- solidity_ls_nomicfoundation = {},
+        -- aiken = {},
 
-        clangd = {},
+        -- clangd = {},
         taplo = {},
         lua_ls = {
           settings = {
@@ -178,6 +200,7 @@ return {
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
       })
+
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
       require('mason-lspconfig').setup {
@@ -207,6 +230,12 @@ return {
       server = {
         override = false,
       },
+    },
+  },
+  {
+    'aiken-lang/editor-integration-nvim',
+    dependencies = {
+      'neovim/nvim-lspconfig',
     },
   },
 }

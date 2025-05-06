@@ -1,6 +1,8 @@
 return { -- Useful plugin to show you pending keybinds.
   'folke/which-key.nvim',
   event = 'VimEnter', -- Sets the loading event to 'VimEnter'
+  ---@module 'which-key'
+  ---@class wk.Opts
   opts = {
     preset = 'helix',
     delay = 100,
@@ -38,6 +40,10 @@ return { -- Useful plugin to show you pending keybinds.
       },
     },
 
+    ---@type wk.Win.opts
+    win = {
+      col = -1,
+    },
     spec = {
       mode = { 'n', 'v' },
       { '<leader>a', group = '[A]I' },
@@ -47,18 +53,10 @@ return { -- Useful plugin to show you pending keybinds.
       { '<leader>t', group = '[T]oggle' },
       { '<leader>x', group = 'diagnostics/quickfix', icon = { icon = '󱖫 ', color = 'green' } },
       { 'z', group = 'fold' },
-      -- {
-      --   'gs',
-      --   group = '[S]urround',
-      -- },
-      {
-        'grn',
-        desc = 'LSP: [R]e[n]ame',
-      },
-      {
-        'gra',
-        desc = 'LSP: Code [A]ction',
-      },
+      { 's', group = '[S]urround' },
+
+      { 'grn', desc = 'LSP: [R]e[n]ame' },
+      { 'gra', desc = 'LSP: Code [A]ction' },
     },
   },
 }

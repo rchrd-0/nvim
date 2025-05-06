@@ -35,6 +35,13 @@ end)
 vim.keymap.set('n', '[t', function()
   vscode.call 'workbench.action.previousEditor'
 end)
+vim.keymap.set('n', '[d', function()
+  vim.fn.VSCodeNotify 'editor.action.marker.prev'
+end)
+
+vim.keymap.set('n', ']d', function()
+  vim.fn.VSCodeNotify 'editor.action.marker.next'
+end)
 
 vim.api.nvim_create_autocmd('TextYankPost', {
   desc = 'Highlight when yanking (copying) text',
@@ -77,17 +84,18 @@ require('lazy').setup {
           down = 'J',
           up = 'K',
         }
-        end,
-        },
-          {
-          'numToStr/Comment.nvim',
-          config = function()
-          line_down = '',
+      end,
+    },
+    {
+      'numToStr/Comment.nvim',
+      config = function()
+        line_down =
+          '',
           ---@diagnostic disable-next-line: missing-fields
           require('Comment').setup {
-          line_up = '',
-          pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
-        }
+            line_up = '',
+            pre_hook = require('ts_context_commentstring.integrations.comment_nvim').create_pre_hook(),
+          }
       end,
       opts = {},
       dependencies = {
@@ -100,3 +108,4 @@ require('lazy').setup {
     } },
   },
 }
+

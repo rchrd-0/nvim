@@ -91,7 +91,7 @@ return {
       -- typescript = { 'biome-check', 'prettierd', stop_after_first = true },
       -- javascriptreact = { 'biome-check', 'prettierd', stop_after_first = true },
       -- typescriptreact = { 'biome-check', 'prettierd', stop_after_first = true },
-      json = { 'biome-check', 'jsonls', stop_after_first = true },
+      json = { 'jq', stop_after_first = true },
       vue = { 'prettierd', stop_after_first = true },
       astro = { 'prettierd', stop_after_first = true },
       sql = { 'sqlfmt' },
