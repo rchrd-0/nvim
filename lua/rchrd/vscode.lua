@@ -74,6 +74,7 @@ require('lazy').setup {
     {
       'echasnovski/mini.nvim',
       config = function()
+        local ai = require 'mini.ai'
         require('mini.surround').setup()
         require('mini.ai').setup()
         require('mini.move').setup {
@@ -108,4 +109,3 @@ require('lazy').setup {
     } },
   },
 }
-

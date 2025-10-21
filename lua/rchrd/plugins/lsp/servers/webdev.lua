@@ -1,28 +1,29 @@
 local M = {}
 
-function M.get_servers(mason_registry)
-  local vue_language_server_path = mason_registry.get_package('vue-language-server'):get_install_path() .. '/node_modules/@vue/language-server'
-  local svelte_language_server_path = mason_registry.get_package('svelte-language-server'):get_install_path() .. '/node_modules/typescript-svelte-plugin'
+function M.get_servers()
+  local capabilities = vim.lsp.protocol.make_client_capabilities()
+  capabilities.textDocument.completion.completionItem.snippetSupport = true
+  local util = require 'lspconfig.util'
+
+  local vue_language_server_path = vim.fn.expand '$MASON/packages' .. '/vue-language-server' .. '/node_modules/@vue/language-server'
+  local vue_plugin = {
+    name = '@vue/typescript-plugin',
+    location = vue_language_server_path,
+    languages = { 'vue' },
+    configNamespace = 'typescript',
+    enableForWorkspaceTypeScriptVersions = true,
+  }
+
+  local svelte_language_server_path = vim.fn.expand '$MASON/packages' .. '/svelte-language-server' .. '/node_modules/typescript-svelte-plugin'
+  local svelte_plugin = {
+    name = 'typescript-svelte-plugin',
+    location = svelte_language_server_path,
+    enableForWorkspaceTypeScriptVersions = true,
+  }
 
   return {
     vtsls = {
-      -- tsserver = {
-      --   globalPlugins = {
-      --     {
-      --       name = '@vue/typescript-plugin',
-      --       location = vue_language_server_path,
-      --       languages = { 'vue' },
-      --       configNamespace = 'typescript',
-      --       enableForWorkspaceTypeScriptVersions = true,
-      --     },
-      --     {
-      --       name = 'typescript-svelte-plugin',
-      --       location = svelte_language_server_path,
-      --       enableForWorkspaceTypeScriptVersions = true,
-      --     },
-      --   },
-      -- },
-      filetypes = { 'typescript', 'javascript', 'javascript.jsx', 'javascriptreact', 'typescriptreact', 'javascript.jsx', 'typescript.tsx', 'vue' },
+      filetypes = { 'typescript', 'javascript', 'javascript.jsx', 'javascriptreact', 'typescriptreact', 'typescript.tsx', 'vue', 'svelte' },
       settings = {
         complete_function_calls = true,
         implicitProjectConfiguration = {
@@ -39,13 +40,8 @@ function M.get_servers(mason_registry)
           },
           tsserver = {
             globalPlugins = {
-              {
-                name = '@vue/typescript-plugin',
-                location = vue_language_server_path,
-                languages = { 'vue' },
-                configNamespace = 'typescript',
-                enableForWorkspaceTypeScriptVersions = true,
-              },
+              vue_plugin,
+              svelte_plugin,
               {
                 name = 'typescript-svelte-plugin',
                 location = svelte_language_server_path,
@@ -73,42 +69,14 @@ function M.get_servers(mason_registry)
             useAliasesForRenames = false,
             importModuleSpecifier = 'non-relative',
           },
-          -- inlayHints = {
-          --   includeInlayParameterNameHints = 'all', -- 'none' | 'literals' | 'all'
-          --   includeInlayParameterNameHintsWhenArgumentMatchesName = true,
-          --   includeInlayVariableTypeHints = false,
-          --   includeInlayFunctionParameterTypeHints = false,
-          --   includeInlayVariableTypeHintsWhenTypeMatchesName = true,
-          --   includeInlayPropertyDeclarationTypeHints = false,
-          --   includeInlayFunctionLikeReturnTypeHints = false,
-          --   includeInlayEnumMemberValueHints = true,
-          -- },
         },
       },
     },
-    html = {
-      filetypes = { 'html', 'ejs' },
-      init_options = {
-        -- provideFormatter = false,
-      },
-    },
-    astro = {},
-    emmet_language_server = {
-      filetypes = {
-        'html',
-        'javascript',
-        'javascriptreact',
-        'typescriptreact',
-        'css',
-        'sass',
-        'scss',
-        'ejs',
-        'vue',
-        'blade',
-      },
-    },
+    html = {},
+    emmet_language_server = {},
     cssls = {
-      -- filetypes = { 'html', 'css', 'scss', 'vue', 'javascript', 'javascriptreact', 'typescript', 'typescriptreact', 'svelte' },
+      capabilities = capabilities,
+      filetypes = { 'css', 'scss', 'less' },
       settings = {
         css = { validate = true, lint = { unknownAtRules = 'ignore' } },
         scss = { validate = true, lint = { unknownAtRules = 'ignore' } },
@@ -125,27 +93,22 @@ function M.get_servers(mason_registry)
     },
     eslint = {},
     prettierd = {},
-    volar = {
-      -- init_options = {
-      --   vue = {
-      --     hybridMode = true,
-      --   },
-      -- },
-    },
     biome = {
+      workspace_required = true,
       filetypes = {
-        'astro',
-        'css',
-        'graphql',
         'javascript',
         'javascriptreact',
-        'json',
-        'jsonc',
-        'svelte',
         'typescript',
         'typescript.tsx',
         'typescriptreact',
-        'vue',
+        -- 'astro',
+        -- 'css',
+        -- 'graphql',
+        -- 'json',
+        -- 'jsonc',
+      },
+      settings = {
+        requireConfiguration = true,
       },
     },
   }

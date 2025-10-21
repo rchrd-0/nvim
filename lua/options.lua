@@ -34,6 +34,7 @@ vim.opt.cursorline = true
 vim.opt.colorcolumn = '80,100'
 
 vim.opt.scrolloff = 10
+vim.opt.sidescrolloff = 8
 -- vim.opt.confirm = true
 
 vim.opt.tabstop = 2

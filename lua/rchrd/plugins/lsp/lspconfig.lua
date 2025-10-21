@@ -12,9 +12,11 @@ return {
   },
   {
     'neovim/nvim-lspconfig',
+    -- tag = 'v2.3.0',
+    -- version = '*',
     dependencies = {
-      { 'williamboman/mason.nvim', opts = {} },
-      'williamboman/mason-lspconfig.nvim',
+      { 'mason-org/mason.nvim', opts = {} },
+      'mason-org/mason-lspconfig.nvim',
       'WhoIsSethDaniel/mason-tool-installer.nvim',
 
       { 'j-hui/fidget.nvim', opts = {} },
@@ -123,100 +125,91 @@ return {
       --  By default, Neovim doesn't support everything that is in the LSP specification.
       --  When you add blink.cmp, luasnip, etc. Neovim now has *more* capabilities.
       --  So, we create new capabilities with blink.cmp, and then broadcast that to the servers.
-      local capabilities = require('blink.cmp').get_lsp_capabilities()
+      -- local capabilities = require('blink.cmp').get_lsp_capabilities()
 
-      local mason_registry = require 'mason-registry'
-      local webdev = require('rchrd.plugins.lsp.servers.webdev').get_servers(mason_registry)
+      -- local mason_registry = require 'mason-registry'
+      -- local webdev = require('rchrd.plugins.lsp.servers.webdev').get_servers(mason_registry)
+      local webdev = require('rchrd.plugins.lsp.servers.webdev').get_servers()
 
       local servers = {
-        jsonls = {
-          init_options = {
-            provideFormatter = false,
-          },
-        },
-        -- tsserver = {
-        --   enabled = false,
-        -- },
-        -- ts_ls = {
-        --   enabled = false,
-        -- },
-        -- go
-        gopls = {},
-
-        -- php
-        phpactor = {},
-        intelephense = {},
-
-        -- python
-        pyright = {},
-        ruff = {
-          cmd_env = {
-            RUFF_TRACE = 'messages',
-          },
-          init_options = {
-            settings = {
-              logLevel = 'error',
+        mason = {
+          jsonls = {
+            init_options = {
+              provideFormatter = false,
             },
           },
-        },
-
-        -- crypto
-        -- solidity_ls_nomicfoundation = {},
-        -- aiken = {},
-
-        -- clangd = {},
-        taplo = {},
-        lua_ls = {
-          settings = {
-            Lua = {
-              completion = {
-                callSnippet = 'Replace',
+          gopls = {},
+          phpactor = {},
+          intelephense = {},
+          pyright = {},
+          ruff = {
+            cmd_env = {
+              RUFF_TRACE = 'messages',
+            },
+            init_options = {
+              settings = {
+                logLevel = 'error',
               },
-              -- workspace = {
-              --   checkThirdParty = false,
-              -- },
-              -- codeLens = {
-              --   enable = true,
-              -- },
-              -- doc = {
-              --   privateName = { '^_' },
-              -- },
-              -- hint = {
-              --   enable = true,
-              --   setType = false,
-              --   paramType = true,
-              --   paramName = 'Disable',
-              --   semicolon = 'Disable',
-              --   arrayIndex = 'Disable',
-              -- },
+            },
+          },
+          taplo = {},
+          lua_ls = {
+            settings = {
+              Lua = {
+                completion = {
+                  callSnippet = 'Replace',
+                },
+                workspace = {
+                  checkThirdParty = false,
+                },
+                codeLens = {
+                  enable = true,
+                },
+                doc = {
+                  privateName = { '^_' },
+                },
+                hint = {
+                  enable = true,
+                  setType = false,
+                  paramType = true,
+                  paramName = 'Disable',
+                  semicolon = 'Disable',
+                  arrayIndex = 'Disable',
+                },
+              },
             },
           },
         },
+        others = {},
       }
 
-      servers = vim.tbl_deep_extend('force', servers, webdev)
+      servers.mason = vim.tbl_deep_extend('force', servers.mason, webdev)
 
-      local ensure_installed = vim.tbl_keys(servers or {})
+      local ensure_installed = vim.tbl_keys(servers.mason or {})
       vim.list_extend(ensure_installed, {
         'stylua', -- Used to format Lua code
       })
 
       require('mason-tool-installer').setup { ensure_installed = ensure_installed }
 
+      -- Either merge all additional server configs from the `servers.mason` and `servers.others` tables
+      -- to the default language server configs as provided by nvim-lspconfig or
+      -- define a custom server config that's unavailable on nvim-lspconfig.
+      for server, config in pairs(vim.tbl_extend('keep', servers.mason, servers.others)) do
+        if not vim.tbl_isempty(config) then
+          vim.lsp.config(server, config)
+        end
+      end
+
       require('mason-lspconfig').setup {
         ensure_installed = {}, -- explicitly set to an empty table (Kickstart populates installs via mason-tool-installer)
-        automatic_installation = false,
-        handlers = {
-          function(server_name)
-            local server = servers[server_name] or {}
-            -- This handles overriding only values explicitly passed
-            -- by the server configuration above. Useful when disabling
-            -- certain features of an LSP (for example, turning off formatting for ts_ls)
-            server.capabilities = vim.tbl_deep_extend('force', {}, capabilities, server.capabilities or {})
-            require('lspconfig')[server_name].setup(server)
-          end,
-        },
+        automatic_enable = true,
       }
+
+      -- Manually run vim.lsp.enable for all language servers that are *not* installed via Mason
+      if not vim.tbl_isempty(servers.others) then
+        vim.lsp.enable(vim.tbl_keys(servers.others))
+      end
     end,
   },
   {
@@ -230,12 +223,6 @@ return {
       server = {
         override = false,
       },
-    },
-  },
-  {
-    'aiken-lang/editor-integration-nvim',
-    dependencies = {
-      'neovim/nvim-lspconfig',
     },
   },
 }

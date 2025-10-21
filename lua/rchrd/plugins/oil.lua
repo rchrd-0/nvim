@@ -25,6 +25,9 @@ return {
     view_options = {
       show_hidden = true,
     },
+    columns = {
+      'icon',
+    },
     keymaps = {
       ['<C-s>'] = false,
       ['<C-h>'] = false,

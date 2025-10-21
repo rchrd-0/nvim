@@ -53,10 +53,18 @@ return { -- Useful plugin to show you pending keybinds.
       { '<leader>t', group = '[T]oggle' },
       { '<leader>x', group = 'diagnostics/quickfix', icon = { icon = '󱖫 ', color = 'green' } },
       { 'z', group = 'fold' },
-      { 's', group = '[S]urround' },
+      -- { 's', group = '[S]urround' },
 
       { 'grn', desc = 'LSP: [R]e[n]ame' },
       { 'gra', desc = 'LSP: Code [A]ction' },
+
+      { 'sa', desc = 'Add surrounding' },
+      { 'sd', desc = 'Delete surrounding' },
+      { 'sf', desc = 'Find surrounding (right)' },
+      { 'sF', desc = 'Find surrounding (left)' },
+      { 'sh', desc = 'Highlight surrounding' },
+      { 'sr', desc = 'Replace surrounding' },
+      { 'sn', desc = 'Update n_lines' },
     },
   },
 }

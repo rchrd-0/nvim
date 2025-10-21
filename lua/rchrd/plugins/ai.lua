@@ -4,6 +4,7 @@ return {
     cmd = 'Copilot',
     event = 'InsertEnter',
     build = ':Copilot auth',
+    enabled = true,
     opts = {
       suggestion = {
         enabled = true,
@@ -23,8 +24,104 @@ return {
       },
     },
   },
+  {
+    'folke/sidekick.nvim',
+    opts = {
+      -- add any options here
+      cli = {
+        mux = {
+          backend = 'tmux',
+          enabled = true,
+        },
+      },
+    },
+    keys = {
+      {
+        '<tab>',
+        function()
+          -- if there is a next edit, jump to it, otherwise apply it if any
+          if not require('sidekick').nes_jump_or_apply() then
+            return '<Tab>' -- fallback to normal tab
+          end
+        end,
+        expr = true,
+        desc = 'Goto/Apply Next Edit Suggestion',
+      },
+      {
+        '<c-.>',
+        function()
+          require('sidekick.cli').toggle()
+        end,
+        desc = 'Sidekick Toggle',
+        mode = { 'n', 't', 'i', 'x' },
+      },
+      {
+        '<leader>aa',
+        function()
+          require('sidekick.cli').toggle()
+        end,
+        desc = 'Sidekick Toggle CLI',
+      },
+      {
+        '<leader>as',
+        function()
+          require('sidekick.cli').select()
+        end,
+        -- Or to select only installed tools:
+        -- require("sidekick.cli").select({ filter = { installed = true } })
+        desc = 'Select CLI',
+      },
+      {
+        '<leader>ad',
+        function()
+          require('sidekick.cli').close()
+        end,
+        desc = 'Detach a CLI Session',
+      },
+      {
+        '<leader>at',
+        function()
+          require('sidekick.cli').send { msg = '{this}' }
+        end,
+        mode = { 'x', 'n' },
+        desc = 'Send This',
+      },
+      {
+        '<leader>af',
+        function()
+          require('sidekick.cli').send { msg = '{file}' }
+        end,
+        desc = 'Send File',
+      },
+      {
+        '<leader>av',
+        function()
+          require('sidekick.cli').send { msg = '{selection}' }
+        end,
+        mode = { 'x' },
+        desc = 'Send Visual Selection',
+      },
+      {
+        '<leader>ap',
+        function()
+          require('sidekick.cli').prompt()
+        end,
+        mode = { 'n', 'x' },
+        desc = 'Sidekick Select Prompt',
+      },
+      -- Example of a keybinding to open Claude directly
+      {
+        '<leader>ac',
+        function()
+          require('sidekick.cli').toggle { name = 'claude', focus = true }
+        end,
+        desc = 'Sidekick Toggle Claude',
+      },
+    },
+  },
   -- {
   --   'milanglacier/minuet-ai.nvim',
+  --   enabled = false,
   --   config = function()
   --     require('minuet').setup {
   --       virtualtext = {
@@ -36,7 +133,7 @@ return {
   --           accept_line = '<M-.>',
   --           -- accept n lines (prompts for number)
   --           -- e.g. "A-z 2 CR" will accept 2 lines
-  --           accept_n_lines = '<A-z>',
+  --           accept_n_lines = '<M-z>',
   --           -- Cycle to prev completion item, or manually invoke completion
   --           prev = '<M-n>',
   --           -- Cycle to next completion item, or manually invoke completion
@@ -46,18 +143,23 @@ return {
   --       },
   --       provider = 'openai_compatible',
   --       request_timeout = 2.5,
-  --       -- throttle = 1000, -- Increase to reduce costs and avoid rate limits
-  --       -- debounce = 400, -- Increase to reduce costs and avoid rate limits
+  --       throttle = 1000, -- Increase to reduce costs and avoid rate limits
+  --       debounce = 400, -- Increase to reduce costs and avoid rate limits
   --       provider_options = {
   --         openai_compatible = {
   --           api_key = 'OPENROUTER_API_KEY',
-  --           end_point = 'https://openrouter.ai/api/v1/chat/completions',
-  --           model = 'google/gemini-2.0-flash-001',
+  --           -- end_point = 'https://openrouter.ai/api/v1/chat/completions',
+  --           -- model = 'google/gemini-2.0-flash-001',
+  --           -- model = 'moonshotai/kimi-k2',
+  --           -- model = 'mistralai/codestral-2508',
+  --           model = 'qwen/qwen3-coder',
   --           name = 'Openrouter',
   --           stream = true,
   --           optional = {
-  --             -- max_tokens = 56,
-  --             -- top_p = 0.9,
+  --             -- max_tokens = 256,
+  --             max_tokens = 256,
+  --             top_p = 0.9,
+  --             -- stop = { '\n\n' },
   --             provider = {
   --               -- Prioritize throughput for faster completion
   --               sort = 'throughput',
@@ -85,117 +187,6 @@ return {
   --       --   },
   --       -- },
   --     }
-  --   end,
-  -- },
-  -- {
-  --   'olimorris/codecompanion.nvim',
-  --   dependencies = {
-  --     'nvim-treesitter/nvim-treesitter',
-  --   },
-  --   config = function()
-  --     local default_model = 'google/gemini-2.5-pro-preview-03-25'
-  --     local available_models = {
-  --       'google/gemini-2.5-pro-preview-03-25',
-  --       'google/gemini-2.5-flash-preview',
-  --       'google/gemini-2.5-flash-preview:thinking',
-  --       'anthropic/claude-3.7-sonnet',
-  --       'anthropic/claude-3.7-sonnet:thinking',
-  --       'anthropic/claude-3.5-sonnet',
-  --       'openai/gpt-4.1',
-  --       'openai/gpt-4.1-mini',
-  --       'openai/gpt-4.1-nano',
-  --       'openai/gpt-4o-mini',
-  --     }
-  --     local current_model = default_model
-  --
-  --     local function select_model()
-  --       vim.ui.select(available_models, {
-  --         prompt = 'Select  Model:',
-  --       }, function(choice)
-  --         if choice then
-  --           current_model = choice
-  --           vim.notify('Selected model: ' .. current_model)
-  --         end
-  --       end)
-  --     end
-  --
-  --     require('codecompanion').setup {
-  --       strategies = {
-  --         chat = {
-  --           adapter = 'openrouter',
-  --           slash_commands = {
-  --             ['file'] = {
-  --               callback = 'strategies.chat.slash_commands.file',
-  --               description = 'Select file(s)',
-  --               opts = {
-  --                 provider = 'mini_pick',
-  --                 contains_code = true,
-  --               },
-  --             },
-  --             ['buffer'] = {
-  --               callback = 'strategies.chat.slash_commands.buffer',
-  --               description = 'Select buffer(s)',
-  --               opts = {
-  --                 provider = 'mini_pick',
-  --                 contains_code = true,
-  --               },
-  --             },
-  --             ['help'] = {
-  --               callback = 'strategies.chat.slash_commands.help',
-  --               description = 'Select helpfile(s)',
-  --               opts = {
-  --                 provider = 'mini_pick',
-  --                 contains_code = true,
-  --               },
-  --             },
-  --           },
-  --           keymaps = {
-  --             send = {
-  --               modes = { i = '<C-CR>' },
-  --             },
-  --           },
-  --         },
-  --         inline = {
-  --           adapter = 'openrouter',
-  --         },
-  --       },
-  --       default = {
-  --         keymaps = {
-  --           send = {
-  --             modes = { i = '<C-CR>' },
-  --           },
-  --         },
-  --       },
-  --       adapters = {
-  --         copilot = function()
-  --           return require('codecompanion.adapters').extend('copilot', {
-  --             schema = {
-  --               model = {
-  --                 default = 'claude-3.7-sonnet',
-  --               },
-  --             },
-  --           })
-  --         end,
-  --         openrouter = function()
-  --           return require('codecompanion.adapters').extend('openai_compatible', {
-  --             env = {
-  --               url = 'https://openrouter.ai/api',
-  --               api_key = 'cmd:bw get password 1772c482-a837-407d-8888-b2c8011890b7',
-  --               chat_url = '/v1/chat/completions',
-  --             },
-  --             schema = {
-  --               model = {
-  --                 default = current_model,
-  --                 -- default = 'google/gemini-2.5-pro-preview-03-25',
-  --                 -- default = 'google/gemini-2.5-flash-preview',
-  --               },
-  --             },
-  --           })
-  --         end,
-  --       },
-  --     }
-  --     vim.keymap.set({ 'n', 'v' }, '<Leader>av', ':CodeCompanionChat Toggle<CR>', { noremap = true, silent = true, desc = 'Toggle CodeCompanionChat' })
-  --     vim.keymap.set({ 'n' }, '<Leader>am', select_model, { noremap = true, silent = true, desc = 'Select CodeCompanion [m]odel' })
   --   end,
   -- },
 }

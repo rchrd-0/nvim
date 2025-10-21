@@ -9,13 +9,12 @@ return {
         dim = false,
       } },
       dashboard = {
-        enabled = true,
+        enabled = false,
         width = 25,
-        row = nil, -- dashboard position. nil for center
-        col = nil, -- dashboard position. nil for center
+        row = nil,
+        col = nil,
         pane_gap = 4,
         preset = {
-          -- pick = 'mini.pick',
           keys = {
             {
               icon = ' ',

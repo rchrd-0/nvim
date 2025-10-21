@@ -1,5 +1,6 @@
 return {
   'stevearc/conform.nvim',
+  enabled = true,
   event = { 'BufWritePre' },
   cmd = { 'ConformInfo' },
   keys = {
@@ -39,7 +40,7 @@ return {
       return has_biome_config or has_biome_installed
     end
 
-    local biome_prettierd = { 'biome-check', 'prettierd', stop_after_first = true }
+    local biome_prettierd = { 'biome', 'prettierd', stop_after_first = true }
     local biome_filetypes = {
       'css',
       'javascript',
@@ -102,6 +103,7 @@ return {
         command = 'biome',
         -- args = { 'check', '--write', '--organize-imports-enabled=false', '--stdin-file-path', '$FILENAME' },
         args = { 'check', '--write', '--stdin-file-path', '$FILENAME' },
+        require_cwd = true,
       },
       prettierd = {
         env = {
