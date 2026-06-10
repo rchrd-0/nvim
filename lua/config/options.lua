@@ -6,6 +6,7 @@ vim.g.snacks_animate = false
 vim.g.lazyvim_picker = "auto"
 vim.g.ai_cmp = false
 vim.g.lazyvim_python_lsp = "pyright"
+vim.g.lazyvim_prettier_needs_config = true
 
 local opt = vim.opt
 

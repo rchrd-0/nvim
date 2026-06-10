@@ -1,6 +1,7 @@
 return {
   {
     "stevearc/conform.nvim",
+    ---@param opts conform.setupOpts
     opts = {
       formatters_by_ft = {
         javascript = { "biome-check", "prettierd", stop_after_first = true },
@@ -25,7 +26,7 @@ return {
           require_cwd = true,
         },
         ["biome-check"] = {
-          require_cwd = false,
+          require_cwd = true,
         },
       },
     },
