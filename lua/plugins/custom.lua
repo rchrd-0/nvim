@@ -109,6 +109,7 @@ return {
         mode = { "n", "v" },
         desc = "Search and Replace",
       },
+      { "<leader>sr", false },
     },
   },
   { "monaqa/dial.nvim", event = "VeryLazy" },
