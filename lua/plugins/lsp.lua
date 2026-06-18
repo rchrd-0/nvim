@@ -49,14 +49,6 @@ return {
             "vue",
             -- "svelte",
           },
-          enableMoveToFileCodeAction = true,
-          autoUseWorkspaceTsdk = true,
-          experimental = {
-            maxInlayHintLength = 30,
-            completion = {
-              enableServerSideFuzzyMatch = true,
-            },
-          },
           settings = {
             typescript = {
               updateImportsOnFileMove = { enabled = "always" },
@@ -77,6 +69,14 @@ return {
               },
             },
             vtsls = {
+              enableMoveToFileCodeAction = true,
+              autoUseWorkspaceTsdk = true,
+              experimental = {
+                maxInlayHintLength = 30,
+                completion = {
+                  enableServerSideFuzzyMatch = true,
+                },
+              },
               tsserver = {
                 globalPlugins = {
                   {

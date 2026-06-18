@@ -20,9 +20,9 @@ return {
       picker = {
         name = "snacks.pick",
       },
-      completion = {
-        blink = true,
-      },
+      -- completion = {
+      --   blink = true,
+      -- },
       workspaces = {
         {
           name = "personal",

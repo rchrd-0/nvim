@@ -1,120 +1,243 @@
 vim.g.suggestion_provider = "copilot"
 
+local suggestion_provider = vim.g.suggestion_provider
+
+local disabled_filetypes = {
+  "bigfile",
+  "snacks_input",
+  "snacks_notif",
+  "snacks_picker_input",
+  "trouble",
+}
+
 local disabled_paths = {
   "$HOME/Library/CloudStorage/OneDrive-Personal/05_Obsidian",
 }
--- local ignore_filetypes = {
---   "bigfile",
---   "snacks_input",
---   "snacks_notif",
---   "snacks_picker_input",
---   "trouble",
--- }
 
-local is_disabled = function(this_buffer)
+local suggestion_keymap = {
+  accept = "<M-l>",
+  accept_word = false,
+  accept_line = "<M-.>",
+  next = "<M-]>",
+  prev = "<M-[>",
+  dismiss = "<C-]>",
+}
+
+local openrouter_profiles = {
+  qwen_coder = {
+    model = "qwen/qwen3-coder-next",
+    stream = true,
+    optional = {
+      max_tokens = 128,
+      temperature = 0,
+      reasoning = { effort = "none" },
+    },
+  },
+  codestral = {
+    model = "mistralai/codestral-2508",
+    stream = true,
+    optional = {
+      max_tokens = 128,
+      temperature = 0,
+    },
+  },
+  deepseek = {
+    model = "deepseek/deepseek-chat",
+    stream = true,
+    optional = {
+      max_tokens = 128,
+      temperature = 0,
+      reasoning = { effort = "none" },
+    },
+  },
+  qwen_flash = {
+    model = "qwen/qwen3-coder-flash",
+    stream = true,
+    optional = {
+      max_tokens = 64,
+      temperature = 0,
+      reasoning = { effort = "none" },
+    },
+  },
+}
+
+-- local openrouter_profile = openrouter_profiles.qwen_flash
+-- local openrouter_profile = openrouter_profiles.qwen_coder
+local openrouter_profile = openrouter_profiles.codestral
+-- local openrouter_profile = openrouter_profiles.deepseek
+
+local function is_disabled_path(bufname)
   for _, path in ipairs(disabled_paths) do
-    -- print(path)
-    if string.find(this_buffer, vim.fn.expand(path), 1, true) ~= nil then
-      -- print("Disabling for buffer: " .. this_buffer)
+    if string.find(bufname, vim.fn.expand(path), 1, true) ~= nil then
       return true
     end
   end
+
   return false
+end
+
+local function is_enabled_for_buffer()
+  return not is_disabled_path(vim.api.nvim_buf_get_name(0))
+end
+
+local function disabled_filetype_map()
+  local filetypes = {}
+
+  for _, filetype in ipairs(disabled_filetypes) do
+    filetypes[filetype] = false
+  end
+
+  return filetypes
+end
+
+local function setup_minuet_ai_accept()
+  LazyVim.cmp.actions.ai_accept = function()
+    local virtualtext = require("minuet.virtualtext").action
+
+    if virtualtext.is_visible() then
+      LazyVim.create_undo()
+      virtualtext.accept()
+      return true
+    end
+  end
+end
+
+local function copilot_nes_jump_or_apply()
+  local ok, nes_api = pcall(require, "copilot.nes.api")
+
+  if not ok then
+    return false
+  end
+
+  local ok_jump, jumped = pcall(nes_api.nes_walk_cursor_start_edit)
+
+  if ok_jump and jumped then
+    return true
+  end
+
+  local ok_apply, applied = pcall(nes_api.nes_apply_pending_nes)
+
+  if ok_apply and applied then
+    pcall(nes_api.nes_walk_cursor_end_edit)
+    return true
+  end
+
+  return false
+end
+
+local function setup_copilot_ai_nes()
+  LazyVim.cmp.actions.ai_nes = function()
+    if copilot_nes_jump_or_apply() then
+      return true
+    end
+  end
 end
 
 return {
   {
     "zbirenbaum/copilot.lua",
+    enabled = suggestion_provider == "copilot",
+    dependencies = {
+      {
+        "copilotlsp-nvim/copilot-lsp",
+        init = function()
+          vim.g.copilot_nes_debounce = 500
+        end,
+      },
+    },
+    init = setup_copilot_ai_nes,
+    keys = {
+      {
+        "<tab>",
+        function()
+          return copilot_nes_jump_or_apply() and "" or "<tab>"
+        end,
+        mode = { "n" },
+        expr = true,
+        desc = "Goto/Apply Next Edit Suggestion",
+      },
+    },
     opts = function(_, opts)
-      -- local filetypes = {}
-      -- for _, ft in ipairs(ignore_filetypes) do
-      --   filetypes[ft] = false
-      -- end
-      --
-
-      opts.filetypes = {
-        bigfile = false,
-        snacks_input = false,
-        snacks_notif = false,
-        snacks_picker_input = false,
-        trouble = false,
-      }
-      vim.list_extend(opts.suggestion, {
-        enabled = vim.g.suggestion_provider == "copilot",
+      opts.suggestion = vim.tbl_deep_extend("force", opts.suggestion or {}, {
+        enabled = true,
+        auto_trigger = true,
+        keymap = suggestion_keymap,
       })
-
+      opts.filetypes = disabled_filetype_map()
       opts.should_attach = function(_, bufname)
-        return not is_disabled(bufname)
+        return not is_disabled_path(bufname)
       end
+      opts.nes = vim.tbl_deep_extend("force", opts.nes or {}, {
+        enabled = true,
+        auto_trigger = true,
+        keymap = {
+          accept_and_goto = false,
+          accept = false,
+          dismiss = false,
+        },
+      })
     end,
   },
   {
     "folke/sidekick.nvim",
-    -- keys = {
-    --   {
-    --     "<leader>ao",
-    --     function()
-    --       require("sidekick.cli").toggle({ name = "opencode", focus = true })
-    --     end,
-    --     desc = "Sidekick Opencode Toggle",
-    --   },
-    -- },
+    opts = function(_, opts)
+      opts = opts or {}
+      opts.nes = vim.tbl_deep_extend("force", opts.nes or {}, {
+        enabled = false,
+      })
+
+      if suggestion_provider == "copilot" then
+        setup_copilot_ai_nes()
+      end
+
+      return opts
+    end,
   },
-  -- {
-  --   "milanglacier/minuet-ai.nvim",
-  --   enabled = false,
-  --   opts = {
-  --     virtualtext = {
-  --       -- Specify the filetypes to enable automatic virtual text completion,
-  --       -- e.g., { 'python', 'lua' }. Note that you can still invoke manual
-  --       -- completion even if the filetype is not on your auto_trigger_ft list.
-  --       auto_trigger_ft = { "*" },
-  --       -- specify file types where automatic virtual text completion should be
-  --       -- disabled. This option is useful when auto-completion is enabled for
-  --       -- all file types i.e., when auto_trigger_ft = { '*' }
-  --       auto_trigger_ignore_ft = {
-  --         "bigfile",
-  --         "snacks_input",
-  --         "snacks_notif",
-  --         "snacks_picker_input",
-  --         "trouble",
-  --       },
-  --       keymap = {
-  --         accept = "<M-l>",
-  --         accept_line = "<M-.>",
-  --         accept_n_lines = nil,
-  --         -- Cycle to next completion item, or manually invoke completion
-  --         next = "<M-]>",
-  --         -- Cycle to prev completion item, or manually invoke completion
-  --         prev = "<M-[>",
-  --         dismiss = "<C-]>",
-  --       },
-  --       -- Whether show virtual text suggestion when the completion menu
-  --       -- (nvim-cmp or blink-cmp) is visible.
-  --       show_on_completion_menu = false,
-  --     },
-  --     provider = "openai_compatible",
-  --     request_timeout = 2.5,
-  --     throttle = 1500, -- Increase to reduce costs and avoid rate limits
-  --     debounce = 600, -- Increase to reduce costs and avoid rate limits
-  --     provider_options = {
-  --       openai_compatible = {
-  --         api_key = "OPENROUTER_API_KEY",
-  --         end_point = "https://openrouter.ai/api/v1/chat/completions",
-  --         model = "deepseek/deepseek-v4-flash",
-  --         name = "Openrouter",
-  --         optional = {
-  --           max_tokens = 56,
-  --           top_p = 0.9,
-  --           provider = {
-  --             -- Prioritize throughput for faster completion
-  --             sort = "throughput",
-  --           },
-  --           -- disable thinking to avoid first token latency
-  --           reasoning_effort = "none",
-  --         },
-  --       },
-  --     },
-  --   },
-  -- },
+  {
+    "milanglacier/minuet-ai.nvim",
+    enabled = suggestion_provider == "minuet",
+    init = setup_minuet_ai_accept,
+    opts = {
+      enable_predicates = {
+        is_enabled_for_buffer,
+      },
+      virtualtext = {
+        auto_trigger_ft = { "*" },
+        auto_trigger_ignore_ft = disabled_filetypes,
+        keymap = {
+          accept = suggestion_keymap.accept,
+          accept_line = suggestion_keymap.accept_line,
+          accept_n_lines = nil,
+          next = suggestion_keymap.next,
+          prev = suggestion_keymap.prev,
+          dismiss = suggestion_keymap.dismiss,
+        },
+        show_on_completion_menu = false,
+      },
+      provider = "openai_compatible",
+
+      -- SPEED
+      -- context_window = 2500,
+      -- throttle = 900,
+      -- debounce = 250,
+
+      -- BASELINE
+      context_window = 6000,
+      throttle = 1200,
+      debounce = 350,
+
+      -- QUIET / CHEAPER
+      -- context_window = 8000,
+      -- throttle = 1800,
+      -- debounce = 600,
+
+      provider_options = {
+        openai_compatible = vim.tbl_deep_extend("force", {
+          name = "Openrouter",
+          end_point = "https://openrouter.ai/api/v1/chat/completions",
+          api_key = "OPENROUTER_API_KEY",
+        }, openrouter_profile),
+      },
+    },
+  },
 }
