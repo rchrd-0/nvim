@@ -62,8 +62,8 @@ local openrouter_profiles = {
 }
 
 -- local openrouter_profile = openrouter_profiles.qwen_flash
--- local openrouter_profile = openrouter_profiles.qwen_coder
-local openrouter_profile = openrouter_profiles.codestral
+local openrouter_profile = openrouter_profiles.qwen_coder
+-- local openrouter_profile = openrouter_profiles.codestral
 -- local openrouter_profile = openrouter_profiles.deepseek
 
 local function is_disabled_path(bufname)
@@ -140,22 +140,22 @@ return {
     dependencies = {
       {
         "copilotlsp-nvim/copilot-lsp",
-        init = function()
-          vim.g.copilot_nes_debounce = 500
-        end,
+        -- init = function()
+        --   vim.g.copilot_nes_debounce = 500
+        -- end,
       },
     },
-    init = setup_copilot_ai_nes,
+    -- init = setup_copilot_ai_nes,
     keys = {
-      {
-        "<tab>",
-        function()
-          return copilot_nes_jump_or_apply() and "" or "<tab>"
-        end,
-        mode = { "n" },
-        expr = true,
-        desc = "Goto/Apply Next Edit Suggestion",
-      },
+      -- {
+      --   "<tab>",
+      --   function()
+      --     return copilot_nes_jump_or_apply() and "" or "<tab>"
+      --   end,
+      --   mode = { "n" },
+      --   expr = true,
+      --   desc = "Goto/Apply Next Edit Suggestion",
+      -- },
     },
     opts = function(_, opts)
       opts.suggestion = vim.tbl_deep_extend("force", opts.suggestion or {}, {
@@ -167,15 +167,15 @@ return {
       opts.should_attach = function(_, bufname)
         return not is_disabled_path(bufname)
       end
-      opts.nes = vim.tbl_deep_extend("force", opts.nes or {}, {
-        enabled = true,
-        auto_trigger = true,
-        keymap = {
-          accept_and_goto = false,
-          accept = false,
-          dismiss = false,
-        },
-      })
+      -- opts.nes = vim.tbl_deep_extend("force", opts.nes or {}, {
+      --   enabled = true,
+      --   auto_trigger = true,
+      --   keymap = {
+      --     accept_and_goto = false,
+      --     accept = false,
+      --     dismiss = false,
+      --   },
+      -- })
     end,
   },
   {
@@ -183,12 +183,12 @@ return {
     opts = function(_, opts)
       opts = opts or {}
       opts.nes = vim.tbl_deep_extend("force", opts.nes or {}, {
-        enabled = false,
+        enabled = true,
       })
 
-      if suggestion_provider == "copilot" then
-        setup_copilot_ai_nes()
-      end
+      -- if suggestion_provider == "copilot" then
+      --   setup_copilot_ai_nes()
+      -- end
 
       return opts
     end,
@@ -214,7 +214,6 @@ return {
         },
         show_on_completion_menu = false,
       },
-      provider = "openai_compatible",
 
       -- SPEED
       -- context_window = 2500,
@@ -231,12 +230,20 @@ return {
       -- throttle = 1800,
       -- debounce = 600,
 
+      provider = "openai_compatible",
+      -- provider = "openai_fim_compatible",
       provider_options = {
         openai_compatible = vim.tbl_deep_extend("force", {
           name = "Openrouter",
           end_point = "https://openrouter.ai/api/v1/chat/completions",
           api_key = "OPENROUTER_API_KEY",
         }, openrouter_profile),
+        openai_fim_compatible = {
+          model = "mercury-edit-2",
+          end_point = "https://api.inceptionlabs.ai/v1/fim/completions",
+          api_key = "INCEPTION_LABS_API_KEY",
+          stream = true,
+        },
       },
     },
   },
