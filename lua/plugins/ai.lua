@@ -11,7 +11,7 @@ local disabled_filetypes = {
 }
 
 local disabled_paths = {
-  "$HOME/Library/CloudStorage/OneDrive-Personal/05_Obsidian",
+  -- "$HOME/Library/CloudStorage/OneDrive-Personal/05_Obsidian",
 }
 
 local suggestion_keymap = {
