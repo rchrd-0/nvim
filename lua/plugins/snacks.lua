@@ -7,6 +7,7 @@ return {
       notifier = { enabled = false },
       terminal = { enabled = false },
       lazygit = { enabled = false },
+      image = { enabled = false },
       zen = {
         enabled = true,
         toggles = {
