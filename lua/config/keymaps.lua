@@ -69,8 +69,53 @@ map("n", "G", "Gzz")
 
 map("n", "ZA", "<cmd>qa<cr>", { silent = true })
 
-map("n", "<M-h>", ":TmuxNavigateLeft<CR>", { noremap = true, silent = true })
-map("n", "<M-j>", ":TmuxNavigateDown<CR>", { noremap = true, silent = true })
-map("n", "<M-k>", ":TmuxNavigateUp<CR>", { noremap = true, silent = true })
-map("n", "<M-l>", ":TmuxNavigateRight<CR>", { noremap = true, silent = true })
-map("n", "<M-\\>", ":TmuxNavigatePrevious<CR>", { noremap = true, silent = true })
+local in_herdr = vim.env.HERDR_ENV == "1"
+
+if in_herdr then
+  map("n", "<M-h>", function()
+    require("herdr-splits").move_cursor_left()
+  end, { silent = true, desc = "Navigate left" })
+
+  map("n", "<M-j>", function()
+    require("herdr-splits").move_cursor_down()
+  end, { silent = true, desc = "Navigate down" })
+
+  map("n", "<M-k>", function()
+    require("herdr-splits").move_cursor_up()
+  end, { silent = true, desc = "Navigate up" })
+
+  map("n", "<M-l>", function()
+    require("herdr-splits").move_cursor_right()
+  end, { silent = true, desc = "Navigate right" })
+else
+  map("n", "<M-h>", "<cmd>TmuxNavigateLeft<CR>", {
+    silent = true,
+    desc = "Navigate left",
+  })
+
+  map("n", "<M-j>", "<cmd>TmuxNavigateDown<CR>", {
+    silent = true,
+    desc = "Navigate down",
+  })
+
+  map("n", "<M-k>", "<cmd>TmuxNavigateUp<CR>", {
+    silent = true,
+    desc = "Navigate up",
+  })
+
+  map("n", "<M-l>", "<cmd>TmuxNavigateRight<CR>", {
+    silent = true,
+    desc = "Navigate right",
+  })
+
+  map("n", "<M-\\>", "<cmd>TmuxNavigatePrevious<CR>", {
+    silent = true,
+    desc = "Navigate previous",
+  })
+end
+
+-- map("n", "<M-h>", ":TmuxNavigateLeft<CR>", { noremap = true, silent = true })
+-- map("n", "<M-j>", ":TmuxNavigateDown<CR>", { noremap = true, silent = true })
+-- map("n", "<M-k>", ":TmuxNavigateUp<CR>", { noremap = true, silent = true })
+-- map("n", "<M-l>", ":TmuxNavigateRight<CR>", { noremap = true, silent = true })
+-- map("n", "<M-\\>", ":TmuxNavigatePrevious<CR>", { noremap = true, silent = true })
