@@ -102,6 +102,10 @@ return {
             buffer = note.bufnr,
             desc = "View links",
           })
+          map("n", "<leader>om", "<cmd>Obsidian template<cr>", {
+            buffer = note.bufnr,
+            desc = "Insert template",
+          })
         end,
       },
     },
