@@ -179,7 +179,10 @@ return {
     end,
   },
   {
-    "folke/sidekick.nvim",
+    -- "folke/sidekick.nvim",
+    "rmarganti/sidekick.nvim",
+    branch = "herdr",
+    version = false,
     opts = function(_, opts)
       opts = opts or {}
       opts.nes = vim.tbl_deep_extend("force", opts.nes or {}, {
