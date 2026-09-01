@@ -21,6 +21,9 @@ return {
           root_markers = root_markers,
           settings = {
             formatterMode = "typstyle",
+            formatterPrintWidth = 120,
+            formatterIndentSize = 2,
+            formatterProseWrap = false,
           },
         },
       },
