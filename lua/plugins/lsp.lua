@@ -77,31 +77,20 @@ return {
                   enableServerSideFuzzyMatch = true,
                 },
               },
-              tsserver = {
-                globalPlugins = {
-                  {
-                    name = "@vue/typescript-plugin",
-                    location = LazyVim.get_pkg_path("vue-language-server", "/node_modules/@vue/language-server"),
-                    languages = { "vue" },
-                    configNamespace = "typescript",
-                    enableForWorkspaceTypeScriptVersions = true,
-                  },
-                },
-              },
             },
           },
         },
-        oxlint = {
-          filetypes = {
-            "javascript",
-            "javascriptreact",
-            "javascript.jsx",
-            "typescript",
-            "typescriptreact",
-            "typescript.tsx",
-            "vue",
-          },
-        },
+        -- oxlint = {
+        --   filetypes = {
+        --     "javascript",
+        --     "javascriptreact",
+        --     "javascript.jsx",
+        --     "typescript",
+        --     "typescriptreact",
+        --     "typescript.tsx",
+        --     "vue",
+        --   },
+        -- },
         cssls = {
           settings = {
             css = { validate = true, lint = { unknownAtRules = "ignore" } },
@@ -110,6 +99,7 @@ return {
         },
         tailwindcss = {
           filetypes = {
+            "astro",
             "javascript",
             "javascriptreact",
             "javascript.jsx",
