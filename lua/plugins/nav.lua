@@ -1,3 +1,39 @@
+return {
+  {
+    "smart-splits-nvim/smart-splits.nvim",
+    version = "^3.0.0",
+    -- tmux needs its Neovim pane marker before the first navigation key.
+    lazy = false,
+    dependencies = {
+      {
+        "adriankarlen/smart-splits-backend-herdr",
+        main = "smart-splits-backend-herdr",
+        opts = {},
+      },
+      {
+        "smart-splits-nvim/backend-tmux",
+        main = "smart-splits-backend-tmux",
+        opts = {},
+      },
+      {
+        "rawnly/smart-splits-backend-rex",
+        main = "smart-splits-backend-rex",
+        opts = {},
+      },
+    },
+    opts = {
+      move = { at_edge = "wrap" },
+      mux = {
+        backend = { "smart-splits-backend-herdr", "smart-splits-backend-tmux", "smart-splits-backend-rex" },
+        -- This config also runs in terminals without a multiplexer.
+        warn_if_unusable = false,
+      },
+    },
+  },
+}
+
+-- Superseded by smart-splits; retained for reference.
+--[=[
 local in_herdr = vim.env.HERDR_ENV == "1"
 
 return {
@@ -20,6 +56,7 @@ return {
 
   {
     "lmilojevicc/herdr-splits.nvim",
+    enabled = true,
     cond = in_herdr,
     event = "VeryLazy",
 
@@ -72,3 +109,4 @@ return {
     -- },
   },
 }
+]=]

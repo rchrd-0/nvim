@@ -14,6 +14,9 @@ vim.g.ai_cmp = false
 vim.g.lazyvim_python_lsp = "pyright"
 vim.g.lazyvim_prettier_needs_config = true
 
+-- Work around stale LSP clients crashing document-color highlights in Neovim 0.12.3.
+vim.lsp.document_color.enable(false)
+
 local opt = vim.opt
 
 opt.clipboard = ""

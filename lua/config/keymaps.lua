@@ -69,6 +69,22 @@ map("n", "G", "Gzz")
 
 map("n", "ZA", "<cmd>qa<cr>", { silent = true })
 
+-- Shared navigation for Herdr, tmux, Rex, and standalone Neovim.
+for key, direction in pairs({ h = "left", j = "down", k = "up", l = "right" }) do
+  local function navigate()
+    require("smart-splits")["move_cursor_" .. direction]()
+  end
+  map("n", "<M-" .. key .. ">", navigate, { silent = true, desc = "Navigate " .. direction })
+
+  -- Herdr's companion plugin forwards Ctrl-h/j/k/l even when invoked by Alt keys.
+  if vim.env.HERDR_ENV == "1" then
+    map("n", "<C-" .. key .. ">", navigate, { silent = true, desc = "Navigate " .. direction })
+  end
+end
+
+-- Superseded by smart-splits; retained for reference.
+-- v3 has no cross-multiplexer replacement for TmuxNavigatePrevious (<M-\>).
+--[=[
 local in_herdr = vim.env.HERDR_ENV == "1"
 
 if in_herdr then
@@ -119,3 +135,4 @@ end
 -- map("n", "<M-k>", ":TmuxNavigateUp<CR>", { noremap = true, silent = true })
 -- map("n", "<M-l>", ":TmuxNavigateRight<CR>", { noremap = true, silent = true })
 -- map("n", "<M-\\>", ":TmuxNavigatePrevious<CR>", { noremap = true, silent = true })
+]=]

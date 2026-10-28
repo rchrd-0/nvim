@@ -15,9 +15,9 @@ return {
       }) do
         opts.formatters_by_ft[ft] = { "biome-check", "prettier", stop_after_first = true }
       end
-      opts.formatters_by_ft.astro = { "prettier", stop_after_first = true }
+      opts.formatters_by_ft.astro = { "biome-check", "prettier", stop_after_first = true }
       opts.formatters_by_ft.vue = { "biome", "prettier", stop_after_first = true }
-      opts.formatters_by_ft.svelte = { "biome", "prettier", stop_after_first = true }
+      opts.formatters_by_ft.svelte = { "biome-check", "prettier", stop_after_first = true }
       opts.formatters_by_ft.json = { "biome-check", "prettier", "jsonls", stop_after_first = true }
       opts.formatters_by_ft.lua = { "stylua" }
 
@@ -33,6 +33,9 @@ return {
           end
         end
       end
+
+      -- Let each project choose its SQL dialect in .sqlfluff.
+      opts.formatters.sqlfluff = { args = { "format", "-" } }
 
       opts.formatters.prettierd = { require_cwd = true }
       opts.formatters.biome = { require_cwd = true }
